@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Home</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- SlideBar -->
+         <!--<div w3-include-html='nav.html'></div>
+         -->
+        <!-- Sidebar  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <!--#include virtual="nav.html"-->
+        <!-- Page Content  -->
+
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Home</b>
+		        </div>
+            </nav>
+        </div>
+
+        <div class="container">
+        	<center>
+                <div id="result">...</div>
+        	</center>
+        	
+
+        	<center>
+        		<a href="page_calendar.html" class="btn btn-dark">
+        			<i class="far fa-calendar-alt"></i>
+        			Calendrier
+        		</a>
+        	</center>
+
+        </div>
+
+    </div>
+
+    <br><br>
+
+    <div class="overlay"></div>
+</body>
+</html>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('in ready');
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+            });
+        });
+    </script>
+
+    <script>
+
+    function isConnected() {$.post(
+            'http://localhost/JSValAcro/isConnected.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    loader();
+                }
+                else {
+                    //User must be connected
+                    document.location.href=data;
+                }
+            },
+            'text'
+        );};
+
+
+        function loader() {$.post(
+            'http://localhost/JSValAcro/load_events.php',
+            {
+                //no data()
+            },
+            function(data) {
+                var html ='';
+                //Do something
+                console.log(data);
+                if (data != null) {
+                    if (data.length==0) {
+                        html="<p>Aucun évènement</p>";
+                    }
+                    else {
+                        //On affiche au maximum trois événements sur la largeur de la page (en plein écran). Pour faire un rendu esthétique (pas une affiche complétement à gauche, sans rien à sa droite), on va moduler l'affichage à l'aide de col-lg de bootstrap.
+                        var nbLines = Math.floor(data.length/3);
+                        var res = data.length%3;
+                        var col_lg;
+                        console.log(nbLines);
+                        console.log(res);
+                        html = "<div class='row'><div class='col-lg-12'><h2 style='text-align: center;'>Liste des évènements</h2><br><br></div>"; //On fait la déclaration du code html permettant de lister les événements!
+                        for(var i = 0; i < data.length; i++ ) {
+                            if ((i/3) < nbLines) {col_lg = "col-lg-4";} //on est sur une ligne avec trois évènements
+                            else if (res==2) {col_lg = "col-lg-6";} //il y a deux évènements sur la dernière ligne
+                            else {col_lg="col-lg-12";} //Dans le dernier cas, il n'y a qu'un seul évènement
+                            html+='<div class='+col_lg+'><div class="product_img"><a href="page_event.html?id_event='+data[i]['id_evenement']+'"><img style="width: 18rem; height: auto;" src="img/poster.jpg"></a><br></div><p><medium>'+data[i]['name']+' | </medium><small>'+data[i]['date_debut']/*on fait appel à la convertion naturelle de la variable en string*/+'</small> <br></p><br></div>'; //On affiche l'événement
+                        }
+                        html+='</div>'; //On ferme l'affichage des événements.
+                    }}
+                else {
+                    html = ("<p>Vous devez être connecté à un profil pour voir les événements</p>");
+                }
+                $('#result').html(html); //C'est le dernier appel de cette fonction qui détermine ce qui se trouve dans la div d'id 'result'
+            },
+            'json'
+        );};
+
+    </script>

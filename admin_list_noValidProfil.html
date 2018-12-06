@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Event</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/popup.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- Page Content  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark" style="margin-right: 15px;">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Liste des profil en attente de validation</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+                <div id="list">
+                    <!-- Liste des profils non validé -->
+                </div>
+                <div>&#9660</div>
+        </div>
+    </div>
+    <br><br>
+
+<div id="popupSubmit" class="modal">
+    <!-- Contenu de la fenêtre -->
+    <div class="modal-content">
+        <div id="closeAlertPopUp"></div> <!-- croix pour fermer la pop up-->
+        <center>
+        <p><div id="message"></div></p>
+        </center>
+    </div>
+</div>
+
+    <div class="overlay"></div>
+</body>
+
+</html>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('in ready');
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+        });
+    </script>
+    <!--Script permettant l'emploie de ajax et jquery (connexion au serveur)-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>
+    function isConnected() {
+        $.post(
+        'http://localhost/JSValAcro/isConnected.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log(data);
+            if (data == "Success") {
+                //Do nothing. User can be here
+                //console.log(extractUrlParams());
+                console.log('Appel de load');
+                listeProfilNonValidé();
+                
+            }
+            else {
+                //User must be connected
+                document.location.href="index.html";
+            }
+        },
+        'text'
+    );};
+
+    function mouseOverDisplay(uid, pid){
+        //console.log("Over "+uid+'_'+pid+"");
+        document.getElementById('onMouseOut_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('onMouseOver_'+uid+'_'+pid+'').style.display = "block";
+    }
+
+    function mouseOutDisplay(uid, pid){
+        document.getElementById('onMouseOver_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('onMouseOut_'+uid+'_'+pid+'').style.display = "block";
+    }
+
+    function listeProfilNonValidé() {
+        $.post(
+        'http://localhost/JSValAcro/no_valid_profil_list.php',
+        {
+            //no data
+        },
+        function(data){
+            console.log(data);
+            html = '';
+            if ((data != null) && (data.length > 0)){
+                html += '<br><h5>Liste parents:</h5><div class="list-group">';
+                for (var i = 0; i < data.length; i++){
+                    html+='<div class="déroulant" onmouseover="mouseOverDisplay('+data[i]['user_id']+','+data[i]['profil_id']+')" onmouseout="mouseOutDisplay('+data[i]['user_id']+','+data[i]['profil_id']+')">';
+
+                        //partie visible quand la souris n'est pas sur cette partie
+                        html +='<div id="onMouseOut_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" class="list-group-item list-group-item-action"><img src="img/user.png" style="height: 25px; width: 25px;"> '+data[i]['nom']+' '+data[i]['prenom']+'</div>';
+                        //Partie visible quand la souris est dessus
+                        html+='<div id="onMouseOver_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" class="list-group-item list-group-item-action" style="display : none;"><img src="img/user.png" style="height: 25px; width: 25px;"> '+data[i]['nom']+' '+data[i]['prenom']+'<br><br><!-- Information supplémentaire pour accepter un profil --> <center><form><table><tr><td>Adhérent : </td><td>';
+                        html+= boutonAdhOui(data[i]['profil_adherent'], data[i]['user_id'], data[i]['profil_id']);
+                        html+='</td><td>';
+                        html+= boutonAdhNon(data[i]['profil_adherent'], data[i]['user_id'], data[i]['profil_id']);
+                        html+='</td></tr><tr><td></td><td colspan="2"> <div id="groupeAdh_'+data[i]['user_id']+'_'+data[i]['profil_id']+'">div load avec other fonction</div> </td></tr><tr><td>Parent : </td><td>';
+                        html+=boutonprtOui(data[i]['profil_parent'], data[i]['user_id'], data[i]['profil_id']);
+                        html+='</td><td>';
+                        html+= boutonprtNon(data[i]['profil_parent'], data[i]['user_id'], data[i]['profil_id']);
+                        html+='</td></tr><tr><td>Coach : </td><td><input type="radio" name="isCoach_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" value="Oui" onclick="onClickCoach('+data[i]['user_id']+','+data[i]['profil_id']+')"/> Oui </td><td><input type="radio" name="isCoach_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" value="Non" onclick="onClickCoach('+data[i]['user_id']+','+data[i]['profil_id']+')" checked/> Non </td></tr><tr><td></td><td colspan="2">';
+                        html+=' <div id="groupeCoach_'+data[i]['user_id']+'_'+data[i]['profil_id']+'">';
+                        html+='</div>';
+                        html+=' </td></tr><tr><td>Comité : </td><td><input type="radio" name="isComité_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" value="Oui"/> Oui </td><td><input type="radio" name="isComité_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" value="Non" checked/> Non </td></tr><tr><td>Administrateur : </td><td><input type="radio" name="isAdmin_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" value="Oui"/> Oui </td><td><input type="radio" name="isAdmin_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" value="Non" checked/> Non </td></tr><tr><td></td><td><input class="btn btn-dark" type="button" value="Refuser" onclick="Refuser('+data[i]['user_id']+','+data[i]['profil_id']+')"/></td><td><input class="btn btn-dark" type="button" value="Accepter" onclick="Accepter('+data[i]['user_id']+','+data[i]['profil_id']+')"/></td></tr></table></form></center></div>';
+
+                    html+='</div>';
+                }
+                 html+='</div>';
+            }
+            else if (data != null){
+                //Aucun parent
+                html += '<center>Aucun profil en attente de validation</center>'
+            } else {
+                html += '<center>Affichage des profils impossible</center>';
+            }
+            $('#list').html(html);
+            initDivSelect(data);
+        },
+        'json'
+        );};
+
+        function initDivSelect(data){
+            console.log(data);
+            if ((data != null) && (data.length > 0)){
+                for (var i = 0; i < data.length; i++){
+                    onClickAdh(data[i]['user_id'], data[i]['profil_id']);
+                    onClickCoach(data[i]['user_id'], data[i]['profil_id']);
+                    choixGroupeCoach(data[i]['user_id'], data[i]['profil_id']);
+                    choixGroupeAdh(data[i]['user_id'], data[i]['profil_id']);
+                }
+            }
+        }
+
+        function valueBoutonRadio (nameBouton){
+            var radios = document.getElementsByName(nameBouton);
+            var valeur = undefined;
+            for(var i = 0; i < radios.length; i++){
+                if(radios[i].checked){
+                    valeur = radios[i].value;
+                }
+            }
+            return valeur;
+        }
+
+        function boutonAdhOui(is_adh, uid, pid){
+            if (is_adh == true){
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Oui" onclick="onClickAdh('+uid+','+pid+')" checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Oui" onclick="onClickAdh('+uid+','+pid+')"/> Oui ';
+            }
+        }
+
+        function boutonAdhNon(is_adh, uid, pid){
+            if (is_adh == true){
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Non" onclick="onClickAdh('+uid+','+pid+')"/> Non ';
+            } else {
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Non" onclick="onClickAdh('+uid+','+pid+')" checked/> Non ';
+            }
+        }
+
+        function boutonprtOui(is_prt, uid, pid){
+            if (is_prt == true){
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Oui"  checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Oui" /> Oui ';
+            }
+        }
+
+        function boutonprtNon(is_prt, uid, pid){
+            if (is_prt == true){
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Non" /> Non ';
+            } else {
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Non" checked/> Non ';
+            }
+        }
+
+        function onClickAdh (uid, pid){
+            //Fonction qui permet de rendre visible ou non la liste ds groupes selon que l'utilisateur soit définit en tant qu'adhérent ou non
+            var valueAdhRadio = valueBoutonRadio ('isAdhérent_'+uid+'_'+pid+'');
+            console.log('isAdhérent_'+uid+'_'+pid+' =>'+valueAdhRadio);
+            if (valueAdhRadio == 'Oui') {
+            //C'est un nouvel adhérent, on affiche la partie concernant les adhérents
+                document.getElementById('groupeAdh_'+uid+'_'+pid+'').style.display = "block";
+                console.log(document.getElementById('groupeAdh_'+uid+'_'+pid+'').style.display)
+            } else {
+            //C'est seulement un parent
+                document.getElementById('groupeAdh_'+uid+'_'+pid+'').style.display = "none";
+            }
+        }
+
+        function onClickCoach (uid, pid){
+            //Fonction qui permet de rendre visible ou non la liste ds groupes selon que l'utilisateur soit définit en tant qu'adhérent ou non
+            var valueCoachRadio = valueBoutonRadio ('isCoach_'+uid+'_'+pid+'');
+            console.log('isCoach_'+uid+'_'+pid+' => '+valueCoachRadio);
+            if (valueCoachRadio == 'Oui') {
+            //C'est un nouvel adhérent, on affiche la partie concernant les adhérents
+            console.log('In oui');
+                document.getElementById('groupeCoach_'+uid+'_'+pid+'').style.display = "block";
+            } else {
+            //C'est seulement un parent
+                document.getElementById('groupeCoach_'+uid+'_'+pid+'').style.display = "none";
+            }
+            console.log(document.getElementById('groupeCoach_'+uid+'_'+pid+'').style.display);
+        }
+
+        function choixGroupeCoach(uid, pid){
+            console.log('in')
+            $.post(
+                'http://localhost/JSValAcro/listeGroupe.php',
+                {
+                    //no data
+                },
+                function(data){
+                    console.log(data);
+                    if (data != null){
+                        htmlSelect ='<SELECT id="choixGroupeCoach_'+uid+'_'+pid+'">';
+                        for (var i = 0; i<data.length; i++){
+                            htmlSelect+='<OPTION value="'+data[i]['nom']+'">'+data[i]['nom'];
+                        }
+                        htmlSelect+='<OPTION selected>Choisissez le groupe entrainé';
+                        htmlSelect += '</SELECT>';
+                        $('#groupeCoach_'+uid+'_'+pid+'').html(htmlSelect);
+                        console.log(htmlSelect);
+                    }
+                },
+                'json'
+            );
+        }
+
+
+        function choixGroupeAdh(uid, pid){
+            console.log('in');
+            $.post(
+                'http://localhost/JSValAcro/listeGroupe.php',
+                {
+                    //no data
+                },
+                function(data){
+                    console.log(data);
+                    if (data != null){
+                        htmlSelect ='<SELECT id="choixGroupeAdh_'+uid+'_'+pid+'">';
+                        for (var i = 0; i<data.length; i++){
+                            htmlSelect+='<OPTION value="'+data[i]['nom']+'">'+data[i]['nom'];
+                        }
+                        htmlSelect+='<OPTION selected>Choisissez son groupe';
+                        htmlSelect += '</SELECT>';
+                        $('#groupeAdh_'+uid+'_'+pid+'').html(htmlSelect);
+                    }
+                },
+                'json'
+            );
+        }
+
+        function Accepter(uid, pid){/*
+            console.log('in accepter');
+            $.post(
+                'http://localhost/JSValAcro/validProfil.php',
+                {
+                    user_id : uid,
+                    profil_id : pid,
+                    isAdh : valueBoutonRadio("isAdhérent_"+uid+"_"+pid),
+                    //groupeMembre : document.getElementById('groupeAdh_'+uid+'_'+pid+'').value,
+                    isParent : valueBoutonRadio("isParent_"+uid+"_"+pid),
+                    isCoach : valueBoutonRadio("isCoach_"+uid+"_"+pid),
+                    //groupeEntrainé : document.getElementById('groupeCoach_'+uid+'_'+pid).value,
+                    isComite : valueBoutonRadio("isComité_"+uid+"_"+pid),
+                    isAdmin : valueBoutonRadio("isAdmin_"+uid+"_"+pid)
+                },
+                function(data){
+                    console.log('In Success fonction');
+                    console.log(data);
+                    alertPopUp(data);
+                },
+                'txt'
+            );*/
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost/JSValAcro/validProfil.php");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+                    //Requête entièrement terminé
+                    alertPopUp(xhr.responseText);
+                }
+                else {
+                    //Do nothing
+                }
+            }
+            var form = new FormData();
+            form.append("uid", uid);
+            form.append("pid",pid);
+            form.append("isAdh", valueBoutonRadio("isAdhérent_"+uid+"_"+pid));
+            form.append("groupeMembre", getSelectValue('choixGroupeAdh_'+uid+'_'+pid+''));
+            //form.append("groupeMembre",document.getElementById('groupeAdh_'+uid+'_'+pid+'').value);
+            form.append("isParent", valueBoutonRadio("isParent_"+uid+"_"+pid));
+            form.append("isCoach", valueBoutonRadio("isCoach_"+uid+"_"+pid));
+            form.append("groupeEntrainé", getSelectValue('choixGroupeCoach_'+uid+'_'+pid+''));
+            form.append("isComite", valueBoutonRadio("isComité_"+uid+"_"+pid));
+            form.append("isAdmin", valueBoutonRadio("isAdmin_"+uid+"_"+pid));
+            xhr.send(form);
+        }
+
+        function Refuser(uid, pid){/*
+            console.log('in accepter');
+            $.post(
+                'http://localhost/JSValAcro/validProfil.php',
+                {
+                    user_id : uid,
+                    profil_id : pid,
+                    isAdh : valueBoutonRadio("isAdhérent_"+uid+"_"+pid),
+                    //groupeMembre : document.getElementById('groupeAdh_'+uid+'_'+pid+'').value,
+                    isParent : valueBoutonRadio("isParent_"+uid+"_"+pid),
+                    isCoach : valueBoutonRadio("isCoach_"+uid+"_"+pid),
+                    //groupeEntrainé : document.getElementById('groupeCoach_'+uid+'_'+pid).value,
+                    isComite : valueBoutonRadio("isComité_"+uid+"_"+pid),
+                    isAdmin : valueBoutonRadio("isAdmin_"+uid+"_"+pid)
+                },
+                function(data){
+                    console.log('In Success fonction');
+                    console.log(data);
+                    alertPopUp(data);
+                },
+                'txt'
+            );*/
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost/JSValAcro/denyProfil.php");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+                    //Requête entièrement terminé
+                    alertPopUp(xhr.responseText);
+                }
+                else {
+                    //Do nothing
+                }
+            }
+            var form = new FormData();
+            form.append("uid", uid);
+            form.append("pid",pid);
+            xhr.send(form);
+        }
+
+    function getSelectValue(selectId)
+    {
+        /**On récupère l'élement html <select>*/
+        var selectElmt = document.getElementById(selectId);
+        /**
+        selectElmt.options correspond au tableau des balises <option> du select
+        selectElmt.selectedIndex correspond à l'index du tableau options qui est actuellement sélectionné
+        */
+        return selectElmt.options[selectElmt.selectedIndex].value;
+    }
+
+    var alert = document.getElementById('popupSubmit');
+    /* Fonction pour faire des alertes PopUp */
+    function alertPopUp(rep) {
+        var html ='';
+        if ((rep == 'Le profil a été validé') || (rep == "Le profil a été refusé")){
+            //On réactualise les profils à valider
+            listeProfilNonValidé();
+        }
+        html = '<span class="close" style="text-align: right;" onclick="closeAlertPopUp()";>&times;</span>';
+        $("#closeAlertPopUp").html(html);
+        $("#message").html(rep);
+        alert.style.display = "block";
+    }
+
+    function closeAlertPopUp() {
+        console.log($("#parent").is(":checked"));
+        alert.style.display = "none";
+    }
+</script>
