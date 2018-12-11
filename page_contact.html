@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Contact</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Nous Contacter</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <center>
+                        <h4>Adresse</h4>
+                        <p>Rue lomprez 59300 Valenciennes</p> <br>
+                        <h4>Mail</h4>
+                        <p>lorenzo.delciotto@neuf.fr</p> <br>
+                        <h4>Contact</h4>
+                        <p>Del Ciotto Lorenzo</p>
+                        <p>Fixe: 03.27.36.15.40</p>
+                        <p>Portable: 06.88.16.30.49</p>
+                        <br>
+                    </center>
+                    
+                </div>
+                <div class="col-md-6">
+                    <br>
+                    <img src="img/valacro_logo2.jpg" style="height: 80%; width: auto;">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="overlay"></div>
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+        });
+    </script>
+
+<script>
+    function isConnected() {$.post(
+        'http://localhost/JSValAcro/isConnected.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log(data);
+            if (data == "Success") {
+                haveProfil();
+            }
+            else {
+                //User must be connected
+                document.location.href="index.html";
+            }
+        },
+        'text'
+    );};
+
+    function haveProfil() {
+        $.post(
+            'http://localhost/JSValAcro/have_profil.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    //Do nothing. User can be here
+                }
+                else {
+                    //User must be connected
+                    document.location.href="select_profil.html";
+                }
+            },
+            'text'
+        );};
+</script>

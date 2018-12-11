@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Log in</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <b class="navtxt">Log in</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+        	<center>
+                <img src="styles/images/banner.png" style="width: 80%; height: auto;">
+        		<br><br>
+        		<form class="form">
+        			<input type="text" id="login" placeholder="  Adresse mail" class="input"/> <br><br>
+        			<input type="password" id="password" placeholder="  Mot de passe" class="input"/> <br><br>
+        			<p style="font-size: 12px;"> <input type="checkbox" name="remember"> Connexion automatique </p>
+        			<input type="submit" id="submit" value="Connexion" class="btn btn-dark input"/> 
+        		</form>
+        		<br>
+        		<a href="page_forgotpassword.html" style="color: #555;">Mot de passe oublié</a> <br>
+        		<a href="page_signup.html" style="color: #555;">Pas encore incrit?</a>
+        	</center>
+        </div>
+    </div>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</body>
+</html>
+
+
+<script>
+        $(document).ready(function () {
+/*
+            $("#submit").click(function(e){
+                e.preventDefault();
+                $.post(
+                    'test_login.php', // Un script PHP que l'on va créer juste après
+                    {
+                        username : $("#username").val(),  // Nous récupérons la valeur de nos input que l'on fait passer à connexion.php
+                        password : $("#password").val()
+                    },
+                    function(data){
+                        if(data == "Success"){
+                             // Le membre est connecté. Ajoutons lui un message dans la page HTML.
+                             $("#resultat").html("<p>Vous avez été connecté avec succès !</p>");
+                        }
+                        else{
+                             // Le membre n'a pas été connecté. (data vaut ici "failed")
+                             $("#resultat").html("<p>Erreur lors de la connexion...</p>");
+                        }
+                    },
+                    'text'
+                 );
+            });
+*/
+        $("#submit").click(function(e){
+            e.preventDefault();
+            alert('click');
+            $.post(
+                'http://localhost/JSValAcro/test_login.php', // Un script PHP que l'on va créer juste après
+                {
+                    login : $("#login").val(),  // Nous récupérons la valeur de nos input que l'on fait passer à connexion.php
+                    password : $("#password").val()
+                },
+                function(data){
+                    console.log(data);
+                    if ((data == ('home.html')) || (data == ('no_valid_profil.html')) || (data == ('set_profil.html'))) {
+                         // Le membre est connecté. Ajoutons lui un message dans la page HTML.
+                         document.location.href=data;
+                    }
+                    else{
+                         // Le membre n'a pas été connecté. (data vaut ici "failed")
+                         console.log("Erreur lors de la connexion...");
+                         document.location.href="index.html";
+                    }
+                },
+                'text'
+             );
+        });
+
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        
+/*
+    $("#submit").click(function{
+        $.ajax({
+            url : 'localhost/JSValAcro/test_login.php',
+            type : 'POST', //Le type e la requête HTTP
+            data : 'email='+document.getElementById('email').value+"&password="+document.getElementById('password').value,
+            dataType : 'html',
+            success : function(code_html, statut) {
+                if(data == 'Success') {
+                    $("#loadNewPage").html("<p>Vous êtes connectés avec succès</p>");
+                }
+                else {
+                    $("#loadNewPage").html("<p>Erreur lors de la connexion</p>");
+                }
+            }
+            complete : function(resulat, statut) {
+                $("#loadNewPage").html("<p>Fin !</p>");
+            }
+        });
+    });
+    */
+    });
+</script>
+<!--
+<script type="text/javascript">
+$(document).ready(function () {
+
+});
+</script>
+-->

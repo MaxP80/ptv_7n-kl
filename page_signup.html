@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Sign up</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <a href="index.html" class="btn btn-dark">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <b class="navtxt">Sign up</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+            <center>
+                <img src="styles/images/banner.png" style="width: 80%; height: auto;">
+                <br><br>
+                <form class="form">
+                    <input type="text" id="new_email" placeholder="  Adresse mail" class="input"> <br><br>
+                    <input type="password" id="new_password" placeholder="  Mot de passe" class="input"> <br><br>
+                    <input type="password" id="confirm_password" placeholder=" Confirmer le mot de passe" class="input"> <br><br>
+                    <input type="submit" id="submit" value="Créer un compte" class="btn btn-dark input"> 
+                </form>
+                <br>
+            </center>
+            
+        </div>
+
+    </div>
+
+    <div class="overlay"></div>
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="styles/bootstrap/bootstrap.min.js"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+</body>
+
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#submit").click(function(e){
+            e.preventDefault();
+            $.post(
+                'http://localhost/JSValAcro/code_valid_account.php', // Un script PHP que l'on va créer juste après
+                {
+                   new_email : $("#new_email").val(), 
+                   new_password : $("#new_password").val(),
+                   confirm_password : $("#confirm_password").val()
+                },
+                function(data){
+                    console.log("Vérification des informations saisies")
+                    console.log(data);
+                    if(data == "no_profil choose"){
+                        alert("no_profil choose");
+                        // Le membre est connecté. Ajoutons lui un message dans la page HTML.
+                        document.location.href="index.html";
+                    }
+                    else if(data == "parent"){
+                         // Le membre n'a pas été connecté. (data vaut ici "failed")
+                        alert("parent");
+                        document.location.href="page_signup.html";
+                    }
+                    else if(data == "membre"){
+                         // Le membre n'a pas été connecté. (data vaut ici "failed")
+                        alert("membre");
+                        document.location.href="page_signup.html";
+                    }
+                    else {
+                        document.location.href="index.html";
+                    }
+                },
+                'text'
+             );
+        });
+
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#dismiss, .overlay').on('click', function () {
+            $('#sidebar').removeClass('active');
+            $('.overlay').removeClass('active');
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').addClass('active');
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+</script>

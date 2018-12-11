@@ -1,0 +1,5 @@
+//Pour haque page 
+-> utilisateur peut-il être sur cette page (admin/membre du groupe concerné/parent dont enfant et membre du groupeconcerné), qu'est-ce qu'il peut y voir (statut), et qu'est-ce qu'il peut y faire!
+
+
+//Possibilité de délier un profil. (Possibilité d'en supprimer un! -> administrateur)

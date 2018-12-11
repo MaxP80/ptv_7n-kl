@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Select Profil</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <b class="navtxt">Sélectionnez votre profil</b>
+		        </div>
+            </nav>
+        </div>
+
+        <div class="container">
+        	<center>
+                <div id="result">...</div>
+        	</center>
+
+        </div>
+
+    </div>
+
+    <br><br>
+
+    <div class="overlay"></div>
+</body>
+</html>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+    <script>
+
+    function isConnected() {$.post(
+            'http://localhost/JSValAcro/isConnected.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    loader();
+                }
+                else {
+                    //User must be connected
+                    document.location.href="index.html";
+                }
+            },
+            'text'
+        );};
+
+        function loader() {
+            console.log('in loader');
+            $.post(
+            'http://localhost/JSValAcro/load_profil.php',
+            {
+                //no data()
+            },
+            function(data) {
+
+                //Do something
+                console.log(data);
+                if (data != null) {
+                    html="<div class='row'><div class='col-lg-12'><h2 style='text-align: center;'>Liste des profils</h2><br><br></div>";
+                    //On ouvre le liste des profils
+                    
+                //On affiche au maximum trois événements sur la largeur de la page (en plein écran). Pour faire un rendu esthétique (pas une affiche complétement à gauche, sans rien à sa droite), on va moduler l'affichage à l'aide de col-lg de bootstrap.
+                var nbLines = Math.floor((data.length+1)/3);
+                var res = (data.length+1)%3;
+                //on utilise data.length+1 car dans tous les cas, le dernier élément permet d'ajouter un nouveauprofil
+                var col_lg;
+                console.log(nbLines);
+                console.log(res);
+                console.log(location.origin+location.pathname);
+                for(var i = 0; i < data.length+1; i++ ) {
+                    //On affiche tous les profils existants liés à l'id de l'utilisateur plus le lien pour en anjouter un nouveau
+                    if ((i/3) < nbLines) {col_lg = "col-lg-4";} //on est sur une ligne avec trois évènements
+                    else if (res==2) {col_lg = "col-lg-6";} //il y a deux profils sur la dernière ligne
+                    else {col_lg="col-lg-12";} //Dans le dernier cas, il n'y a qu'un seul profil
+                    if (i < data.length) {
+                        //Dans ce cas, il s'agit d'afficher un profil existant
+                        html+='<div class='+col_lg+'><div class="product_img"><a href="home.html" onclick="profil_choose('+data[i]["profil_id"]+')"><img style="width: 18rem; height: auto;" src="img/poster.jpg"></a><br></div><p><medium>'+data[i]["prenom"]+' '+data[i]["nom"]+'</small> <br></p><br></div>'; //On affiche l'événement
+                    }
+                    else {
+                        //Il faut afficher le lien pour ajouter un nouveau profil
+                        html+='<div class='+col_lg+'><div class="product_img"><a href="page_addEnfant.html?src='+location.origin+location.pathname+'"><img style="width: 18rem; height: auto;" src="img/add_profil.png"></a><br></div><p><medium> Ajouter un nouveau profil </small> <br></p><br></div>'; //On affiche l'événement
+                    }
+                }
+                html+='</div>'; //On ferme l'affichage des profils.
+                }
+                $('#result').html(html); //C'est le dernier appel de cette fonction qui détermine ce qui se trouve dans la div d'id 'result'
+            },
+            'json'
+        );};
+
+        function profil_choose(id) {$.post(
+            'http://localhost/JSValAcro/change_profil.php',
+            {
+                profil_id : id
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    //On ne fit rien (les liens sont codés en html)
+                }
+                else {
+                    //problem
+                    alert('Erreur - Veuillez recommencer!')
+                    document.location.href="select_profil.html";
+                }
+            },
+            'text'
+        );
+        };
+
+    </script>
