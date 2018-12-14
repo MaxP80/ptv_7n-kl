@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Formulaire d'inscription</title>
+
+    <link rel="stylesheet" href="styles/popup.css">
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        .terms {
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body onload="javascript:isConnected();">
+    <div class="wrapper">
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <b class="navtxt">Formulaire d'inscription</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+            <center>
+                <form class="form">
+                    <input type="text" name="nom" id="nom" placeholder="Nom" class="text-input text-input--underbar"> <br><br>
+                    <input type="text" name="prenom" id="prenom" placeholder="Prenom" class="text-input text-input--underbar"> <br><br>
+                    <div id="bday"> - - </div><br> 
+                    <div id="bdayButton" style="cursor : pointer;">Entrer votre date d'anniversaire</div> <br>
+
+                    <!-- Fenêtre Pop Up pour saisir sa date de naissance -->
+                    <div id="popup" class="modal">
+                        <!-- Contenu de la fenêtre -->
+                        <div class="modal-content">
+                            <span class="close" style="text-align: right;">&times;</span> <!-- croix pour fermer la pop up-->
+                            <center>
+                            <p> <table><thead><td> Day </td><td> Mounth </td><td> Year </td></thead>
+                                <tbody>
+                                <td><input type="number" id="day" min="1" max="31" placeholder="dd"></td>
+                                <td><input type="number" id="mounth" min="1" max="12" placeholder="mm"></td>
+                                <td><input type="number" id="year" min="0" max="9999" placeholder="yyyy"></td>
+                            </tbody>
+                            <tfoot><td colspan="2"></td><td colspan="1" style="text-align:center; cursor:pointer;" onclick="setBday(); closePopUp();">Valider</td></tfoot></table> </p>
+                            </center>
+                        </div>
+                    </div>
+
+                    <p><label style="font-size: 12px;" for="parent"><input type="checkbox" name="parent" id="parent"> Ce profil est un profil parent *</label><br>
+                    <label style="font-size: 12px;" for="adherent"><input type="checkbox" name="adherent" id="adherent" checked='true' onclick="adherant();"> Je suis un nouvel adhérent</label>
+                    </p>
+
+                    <div id="AffichageAdhérent">
+                    <p class="terms">
+                        <label for="mon_fichier">Veuillez fournir votre <b>certificat médical</b> (tous formats | <b>max. 1 Mo</b>) :</label><br />
+                        <input type="file" name="mon_fichier" id="mon_fichier" /><br /></p>
+                    <p class="terms">En acceptant l'inscription, vous: <br>Autorisez les responsables de Val'Acro á faire pratiquer, en cas d'urgence, une intervention médicale ou chirurgicale en cas de nécessité.<br>Autorisez l'adhérent á venir par ses propres moyens sur le lieu d'entraînement ou de compétition <br>et á être transporté en autocar ou, le cas échéant, par les véhicules des accompagnateurs.
+                    </p>
+                    <label style="font-size: 12px;" for="conditions"><input type="checkbox" name="accept" id="conditions">  Je valide les conditions</label> <!--Fait par Giovanni -->
+                    </div>
+                    <input type="button" name="submit" id="submit" value="Valider" class="btn btn-dark input">
+                </form>
+            </center>
+            <br>
+            <center>
+                <a href="index.html" class="btn btn-dark" onclick="        
+            $.post(
+                'deconnect.php', // Un script PHP que l'on va créer juste après
+                {
+                },
+                function(data){
+                    console.log('Log out in progress');
+                    console.log(data);
+                },
+                'text'
+             );">
+                    <i class="far fa-calendar-alt"></i>
+                    Se déconnecter
+                </a>
+            </center>
+            <br>
+            <center>
+            <br><br> <p style="font-size: 12px;">* Un profil parent permet de voir les informations de tous les profils associès à ce compte. Un profil parent peut être créé sans qu'il soit adhérent à l'association</p></center>
+        </div>
+
+
+<div id="popupSubmit" class="modal">
+    <!-- Contenu de la fenêtre -->
+    <div class="modal-content">
+        <div id="closeAlertPopUp"></div> <!-- croix pour fermer la pop up-->
+        <center>
+        <p><div id="message"></div></p>
+        </center>
+    </div>
+</div>
+
+    </div>
+
+    <div class="overlay"></div>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+</body>
+
+</html>
+    <!--Script permettant l'emploie de ajax et jquery (connexion au serveur)-->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+$back = null; //Variable qui renvoie vers la page précédente (page source)
+    function isConnected() {$.post(
+            'http://localhost/JSValAcro/isConnected.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "set_profil.html") {
+                    //On est sur la bonne page: on ne recharge pas une deuxième fois la page!
+                }
+                else if (data == "Success") {
+                    document.location.href="home.html"; //Il n'a pas à être ici
+                }
+                else {
+                    //User must be connected
+                    document.location.href=data;
+                }
+            },
+            'text'
+        );};
+
+    function adherant() {
+        if ($('#adherent').is(":checked") === true) {
+            //C'est un nouvel adhérent, on affiche la partie concernant les adhérents
+            document.getElementById('AffichageAdhérent').style.display = "block";
+        } else {
+            //C'est seulement un parent
+            document.getElementById('AffichageAdhérent').style.display = "none";
+        }
+    };
+
+</script>
+
+<script type="text/javascript">
+    $("#submit").click(function(e){
+        if ($('#adherent').is(":checked") === true) {
+            //C'est un nouvel adhérent, on affiche la partie concernant les adhérents
+            if ($('#conditions').is(":checked") === true) {
+                if ($('#mon_fichier').val().length > 0) {
+                    upload();
+                } else {
+                    alertPopUp ("Vous devez joindre votre certificat médical");
+                }
+            }
+            else {
+                alertPopUp("Veuillez accepeter les conditions générales")
+            }
+        } else if ($('#parent').is(":checked") === true){
+            //C'est seulement un parent
+            uploadBis();
+        }
+        else {
+            //Aucun statut n'a été coché, on met un message d'erreur
+            alertPopUp('Veuillez définir si vous êtes parent ou/et adhérent');
+        }  
+    });
+
+$uploaded = false;
+function upload() {
+    var certificat = document.querySelector("#mon_fichier");
+    var res;
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost/JSValAcro/setAdherent.php");
+    /*xhr.upload.onprogress = function(e) {
+        progress.value = e.loaded;
+        progress.max = e.total;
+    }*/
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+            //Requête entièrement terminé
+            alertPopUp(xhr.responseText);
+        }
+        else {
+            //Do nothing
+        }
+    }
+    var form = new FormData();
+    form.append("certificat", certificat.files[0]);
+    form.append("isParent", $("#parent").is(":checked"));
+    form.append("isAdherent", $("#adherent").is(":checked"));
+    form.append("nom", $("#nom").val());
+    form.append("prenom", $("#prenom").val());
+    form.append("bday", $("#day").val());
+    form.append("bmounth", $("#mounth").val());
+    form.append("byear", $("#year").val());
+    xhr.send(form);
+    return true;
+};
+
+
+function uploadBis() {
+    var res;
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost/JSValAcro/setParent.php");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+            //Requête entièrement terminé
+            console.log("setParent");
+            alertPopUp(xhr.responseText);
+        }
+        else {
+            //Do nothing
+        }
+    }
+    var form = new FormData();
+    form.append("isParent", $("#parent").is(":checked"));
+    form.append("isAdherent", $("#adherent").is(":checked"));
+    form.append("nom", $("#nom").val());
+    form.append("prenom", $("#prenom").val());
+    form.append("bday", $("#day").val());
+    form.append("bmounth", $("#mounth").val());
+    form.append("byear", $("#year").val());
+    xhr.send(form);
+    return true;
+};
+
+var alert = document.getElementById('popupSubmit');
+//$quit = document.getElementsById("logoCloseAlertPopUp");
+function alertPopUp(rep) {
+    var html ='';
+    if (rep == "Votre profil a été créé avec succés") {
+        html = '<a href="no_valid_profil.html"><span id="logoCloseAlertPopUp" class="close" style="text-align: right;">&times;</span></a>';
+    } else {
+        html = '<span class="close" style="text-align: right;" onclick="closeAlertPopUp()";>&times;</span>';
+    }
+    $("#closeAlertPopUp").html(html);
+    $("#message").html(rep);
+    alert.style.display = "block";
+}
+
+function closeAlertPopUp() {
+    console.log($("#parent").is(":checked"));
+    alert.style.display = "none";
+}
+</script>
+
+<script>
+    //Script permettant de contrôler la fenêtre pop up
+    // Get the modal
+    var modal = document.getElementById('popup');
+    // Get the button that opens the modal
+    var btn = document.getElementById("bdayButton");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    // When the user clicks on the button, open the modal 
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    function closePopUp() {
+        modal.style.display = "none";
+    };
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        closePopUp();
+    };
+
+    function setBday() {
+        $("#bday").html(""+$("#day").val()+" - "+$("#mounth").val()+" - "+$("#year").val());
+    };
+</script>

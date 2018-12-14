@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Val'Acro</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/popup.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <style>
+        input [type=button]{
+            width: 25%;
+            min-width: 220px;
+        }
+        table{
+            width: 90%;
+            text-align: center;
+            border-collapse: separate;
+            border-spacing: 10px; 
+        }
+    </style>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- Page Content  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark" style="margin-right: 15px;">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Liste des comptes</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+                <div id="critères">
+                    <center>
+                        <table>
+                            <thead>
+                                <th colspan="3"> Critères de sélections </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="1"><input type="checkbox" id="adhSelect" onclick="SelectGroupAdh();"></td><td colspan="2"><label for="adhSelect">Adhérent</label></td>
+                                </tr><tr id="SelectGroupAdh">
+                                    <td></td>
+                                    <td colspan="2">
+                                        <div id="choixGroupeAdh"  style="display : none"><!-- Choix d'un groupe d'adhérent --></div>
+                                    </td>
+                                </tr><tr>
+                                    <td colspan="1"><input type="checkbox" id="prtSelect"></td><td colspan="2"><label for="prtSelect">Parent</label></td>
+                                </tr><tr>
+                                    <td colspan="1"><input type="checkbox" id="coachSelect"></td><td colspan="2"><label for="coachSelect">Coach</label></td>
+                                </tr><tr>
+                                    <td colspan="1"><input type="checkbox" id="comiteSelect"></td><td colspan="2"><label for="comiteSelect">Membre du comité</label></td>
+                                </tr><tr>
+                                    <td colspan="1"><input type="checkbox" id="adminSelect"></td><td colspan="2"><label for="adminSelect">Administrateur</label></td>
+                                </tr>
+                                <tr>
+                                    <td> Recherche </td>
+                                    <td colspan="2"><input style="padding-left: 5px;" type="text" id="searchBar"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><input style="width: 25%;min-width: 220px;" class="btn btn-dark" type="button" value="Afficher les profils" onclick="listeSelectCompte();" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </center>
+                </div>
+                <div id="list">
+                    <!-- Affichage des comptes selon les critères choisis -->
+                </div>
+        </div>
+    </div>
+    <br><br>
+
+<div id="popupSubmit" class="modal">
+    <!-- Contenu de la fenêtre -->
+    <div class="modal-content">
+        <div id="closeAlertPopUp"></div> <!-- croix pour fermer la pop up-->
+        <center>
+        <p><div id="message"></div></p>
+        </center>
+    </div>
+</div>
+
+
+<div id="popupDelete" class="modal">
+    <!-- Contenu de la fenêtre -->
+    <div class="modal-content">
+        <div id="closePopUpDelete"></div> <!-- croix pour fermer la pop up-->
+        <center>
+        <p><div id="messagePopUpDelete"></div></p>
+        </center>
+    </div>
+</div>
+
+    <div class="overlay"></div>
+</body>
+
+</html>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('in ready');
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+        });
+    </script>
+    <!--Script permettant l'emploie de ajax et jquery (connexion au serveur)-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>
+    function isConnected() {
+        loadChoixGroupe();
+        $.post(
+        'http://localhost/JSValAcro/isConnected.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log(data);
+            if (data == "Success") {
+                //Do nothing. User can be here
+                //console.log(extractUrlParams());
+                console.log('Appel de load');
+                choixGroupeAdh();
+                listeCompte();
+            }
+            else {
+                //User must be connected
+                document.location.href="index.html";
+            }
+        },
+        'text'
+    );};
+
+    function choixGroupeAdh(){
+        console.log('in');
+        $.post(
+            'http://localhost/JSValAcro/listeGroupe.php',
+            {
+                //no data
+            },
+            function(data){
+                //console.log(data);
+                if (data != null){
+                    htmlSelect ='<SELECT id="selectGroupeAdh">';
+                    for (var i = 0; i<data.length; i++){
+                        htmlSelect+='<OPTION value="'+data[i]['nom']+'">'+data[i]['nom']+'</OPTION>';
+                    }
+                    htmlSelect+='<OPTION selected> Groupe </OPTION>';
+                    htmlSelect += '</SELECT>';
+                    $('#choixGroupeAdh').html(htmlSelect);
+                }
+            },
+            'json'
+        );
+    }
+
+    function mouseOverDisplay(uid, pid){
+        //console.log("Over "+uid+'_'+pid+"");
+        document.getElementById('onMouseOut_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('onMouseOver_'+uid+'_'+pid+'').style.display = "block";
+    }
+
+    function mouseOutDisplay(uid, pid){
+        document.getElementById('onMouseOver_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('onMouseOut_'+uid+'_'+pid+'').style.display = "block";
+    }
+
+    function showActions(uid, pid){
+        document.getElementById('déroulant_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('showBouton_'+uid+'_'+pid+'').style.display = "block";
+    }
+    function hidenActions(uid, pid){
+        document.getElementById('showBouton_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('déroulant_'+uid+'_'+pid+'').style.display = "block";
+    }
+    function listeCompte() {
+        $.post(
+        'http://localhost/JSValAcro/listComptes.php',
+        {
+            //no data 
+        },
+        function(data){
+            console.log(data);
+            html = '';
+            if ((data != null) && (data.length > 0)){
+                html += '<br><h5>Liste parents:</h5><div class="list-group">';
+                for (var i = 0; i < data.length; i++){
+                        html+=loadProfil(data, i);
+                }
+                 html+='</div>';
+            }
+            else if (data != null){
+                //Aucun parent
+                html += '<center>Aucun compte ne répond aux critères sélectionné</center>';
+            } else {
+                html += '<center>Affichage des comptes impossible</center>';
+            }
+            $('#list').html(html);
+            initDivSelect(data);
+        },
+        'json'
+        );};
+
+
+    function listeSelectCompte() {
+        console.log('In deb fonction');
+        $.post(
+        'http://localhost/JSValAcro/listComptes.php',
+        {
+            adherent: ''+$("#adhSelect").is(":checked"),
+            groupeMembre: getSelectValue("selectGroupeAdh"),
+            parent: ''+$("#prtSelect").is(":checked"),
+            coach: ''+$("#coachSelect").is(":checked"),
+            comite: ''+$("#comiteSelect").is(":checked"),
+            admin: ''+$("#adminSelect").is(":checked"),
+            searchName:''+$('#searchBar').val()
+        },
+        function(data){
+            console.log('Affichage des profils');
+            console.log(data);
+            console.log('prt' + $("#prtSelect").is(":checked"));
+            html = '';
+            if ((data != null) && (data.length > 0)){
+                html += '<br><h5>Liste parents:</h5><div class="list-group">';
+                for (var i = 0; i < data.length; i++){
+                        html+=loadProfil(data, i);
+                }
+                html+='</div>';
+            }
+            else if (data != null){
+                //Aucun parent
+                html += '<center>Aucun compte ne répond aux critères sélectionné</center>'
+            } else {
+                html += '<center>Affichage des comptes impossible</center>';
+            }
+            $('#list').html(html);
+            console.log('fin html');
+            initDivSelect(data);
+        },
+        'json'
+        );}
+
+        function initDivSelect(data){
+            console.log('initDivSelect');
+            //Initialisation de l'affichage de la page
+            //console.log(data);
+            if ((data != null) && (data.length > 0)){
+                for (var i = 0; i < data.length; i++){
+                    onClickAdh(data[i]['user_id'], data[i]['profil_id']);
+                    onClickCoach(data[i]['user_id'], data[i]['profil_id']);
+                    choixGroupeCoach(data[i]['user_id'], data[i]['profil_id'], data[i]['groupeCoaché']);
+                    choixGroupeAdhérent(data[i]['user_id'], data[i]['profil_id'], data[i]['groupeMembre']);
+                }
+            }
+        }
+
+    function loadProfil(data, i){
+        html='';
+        html+='<div id="déroulant_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" class="déroulant" onmouseover="mouseOverDisplay('+data[i]['user_id']+','+data[i]['profil_id']+')" onmouseout="mouseOutDisplay('+data[i]['user_id']+','+data[i]['profil_id']+')">';
+        //partie visible quand la souris n'est pas sur cette partie
+        html +='<div id="onMouseOut_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" class="list-group-item list-group-item-action"><img src="img/user.png" style="height: 25px; width: 25px;"> '+data[i]['nom']+' '+data[i]['prenom']+'</div>';
+        //Partie visible quand la souris est dessus
+        html+='<div id="onMouseOver_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" class="list-group-item list-group-item-action" style="display : none;"><img src="img/user.png" style="height: 25px; width: 25px;"> '+data[i]['nom']+' '+data[i]['prenom']+'<br><!-- Information supplémentaire pour accepter un profil --><div id="detail_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" style="text-align: center;" onclick="showActions('+data[i]['user_id']+','+data[i]['profil_id']+')" class="pointer">&#9660</div></div></div>';
+        //Partie visible quand on a cliqué sur la fléche du bas!!!
+        html+='<div name="formulaire" id="showBouton_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" style="display : none;" class="list-group-item"><div><img src="img/user.png" style="height: 25px; width: 25px;"> '+data[i]['nom']+' '+data[i]['prenom']+'</div><div style="height:5px;"></div><center><div><a href="user_info.html?src='+document.location+'&uid='+data[i]['user_id']+'&pid='+data[i]['profil_id']+'"><input class="btn btn-dark"  style="width: 25%;min-width: 220px;" type="button" value="Voir le profil"/></a><div style="height:5px;"></div><input class="btn btn-dark" style="width: 25%;min-width: 220px;" type="button" value="Modifier le statut du profil" onclick="showForm('+data[i]['user_id']+','+data[i]['profil_id']+')"/></div><div style="height:5px;"></div><div><input class="btn btn-dark" style="width: 25%;min-width: 220px;" type="button" value="Supprimer le profil" onclick="deleteProfil('+data[i]['user_id']+','+data[i]['profil_id']+');"/></div><div onclick="hidenActions('+data[i]['user_id']+','+data[i]['profil_id']+')" class="pointer">&#9650</div></center></div>';
+        //Partie visible lorsqu'on a demande à changer le statut
+        html+='<div name="formulaire" id="showForm_'+data[i]['user_id']+'_'+data[i]['profil_id']+'" style="display : none;" class="list-group-item"><div><img src="img/user.png" style="height: 25px; width: 25px;"> '+data[i]['nom']+' '+data[i]['prenom']+'</div><div><center><form><table><tr><td>Adhérent : </td><td>';
+        html+= boutonAdhOui(data[i]['profil_adherent'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td><td>';
+        html+= boutonAdhNon(data[i]['profil_adherent'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td></tr><tr><td></td><td colspan="2"> <div id="groupeAdh_'+data[i]['user_id']+'_'+data[i]['profil_id']+'"></div> </td></tr><tr><td>Parent : </td><td>';
+        html+=boutonprtOui(data[i]['profil_parent'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td><td>';
+        html+= boutonprtNon(data[i]['profil_parent'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td></tr><tr><td>Coach : </td><td>';
+        html+=boutonCoachOui(data[i]['is_coach'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td><td>';
+        html+=boutonCoachNon(data[i]['is_coach'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td></tr><tr><td></td><td colspan="2">';
+        html+=' <div id="groupeCoach_'+data[i]['user_id']+'_'+data[i]['profil_id']+'">';
+        html+='</div>';
+        html+=' </td></tr><tr><td>Comité : </td><td>';
+        html+=boutonComiteOui(data[i]['in_comite'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td><td>';
+        html+=boutonComiteNon(data[i]['in_comite'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td></tr><tr><td>Administrateur : </td><td>';
+        html+=boutonAdminOui(data[i]['is_admin'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td><td>';
+        html+= boutonAdminNon(data[i]['is_admin'], data[i]['user_id'], data[i]['profil_id']);
+        html+='</td></tr><tr><td></td><td><input class="btn btn-dark" type="button" value="Annuler" onclick="Annuler('+data[i]['user_id']+','+data[i]['profil_id']+')"/></td><td><input class="btn btn-dark" type="button" value="Modifier" onclick="Modifier('+data[i]['user_id']+','+data[i]['profil_id']+')"/></td></tr></table></form><br></center></div>';
+        //Fin du formulaire pour changer le statut
+        html+='</div>';
+        return (html);
+    }
+    //Gestion de la popUp permettant de changer le statut du profil
+    var alert = document.getElementById('popupSubmit');
+    /* Fonction pour faire des alertes PopUp */
+    function alertPopUp(rep) {
+        var html ='';
+        if ((rep == "Le profil a été supprimé") || (rep == "Les modifications ont réussies")){
+            //On réactualise la liste des profils
+            listeSelectCompte();
+        }
+        html = '<span class="close" style="text-align: right;" onclick="closeAlertPopUp();">&times;</span>';
+        $("#closeAlertPopUp").html(html);
+        $("#message").html(rep);
+        alert.style.display = "block";
+    }
+
+    function closeAlertPopUp() {
+        alert.style.display = "none";
+    }
+
+    //Gestion de la popUp permettant de confirmer la suppression d'un profil!
+    var deny = document.getElementById('popupDelete');
+    /* Fonction pour faire des alertes PopUp */
+    function denyPopUp(content) {
+        var html ='';
+        htmlClose = '<span class="close" style="text-align: right;" onclick="closeDenyPopUp();">&times;</span>';
+        $("#closePopUpDelete").html(htmlClose);
+        $("#messagePopUpDelete").html(content);
+        deny.style.display = "block";
+    }
+
+    function closeDenyPopUp() {
+        deny.style.display = "none";
+    }
+
+    function deleteProfil(uid, pid){
+        html= '<table><tr><td colspan="2"><center>Voulez-vous vraiment supprimer ce profil?</center></td></tr><tr><td><input class="btn btn-dark" style="width: 25%;min-width: 110px;" type="button" value="Annuler" onclick="closeDenyPopUp();"/></td><td><input class="btn btn-dark" style="width: 25%;min-width: 110px;" type="button" value="Confirmer" onclick="confirmDeleteProfil('+uid+','+pid+','+false+');"/></td></tr></table>'
+        denyPopUp(html);
+    }
+
+    function confirmDeleteProfil (uid, pid, confirm){
+        xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost/JSValAcro/deleteProfil.php");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+                //Requête entièrement terminé
+                var rep = xhr.responseText;
+                console.log(rep);
+                if (rep == "La supression de ce compte entraîne la supression d'autres comptes qui lui sont liés"){
+                    htmlSelect = '<p><center>'+rep+'</center></p>';
+                    htmlSelect +='<table><tr><td colspan="2"><center>Voulez-vous vraiment supprimer ce profil?</center></td></tr><tr><td><input class="btn btn-dark" style="width: 25%;min-width: 110px;" type="button" value="Annuler" onclick="closeDenyPopUp();"/></td><td><input class="btn btn-dark" style="width: 25%;min-width: 110px;" type="button" value="Confirmer" onclick="closeDenyPopUp();confirmDeleteProfil('+uid+','+pid+','+true+');"/></td></tr></table>';
+                    denyPopUp(htmlSelect);
+                } else {
+                    closeDenyPopUp();
+                    alertPopUp(rep);
+                }
+                
+            }
+            else {
+                //Do nothing
+            }
+        }
+        var form = new FormData();
+        form.append("uid", uid);
+        form.append("pid",pid);
+        form.append("confirm_delete", confirm);
+        xhr.send(form);
+    }
+
+    function SelectGroupAdh(){
+        if ($("#adhSelect").is(":checked")) {
+            document.getElementById("choixGroupeAdh").style.display = "block";
+        } else {
+            document.getElementById("choixGroupeAdh").style.display = "none";
+        }
+    }
+
+    function getSelectValue(selectId)
+    {
+        /**On récupère l'élement html <select>*/
+        var selectElmt = document.getElementById(selectId);
+        /**
+        selectElmt.options correspond au tableau des balises <option> du select
+        selectElmt.selectedIndex correspond à l'index du tableau options qui est actuellement sélectionné
+        */
+        return selectElmt.options[selectElmt.selectedIndex].value;
+    }
+    
+        function boutonAdhOui(is_adh, uid, pid){
+            console.log('click adh oui');
+            if (is_adh == true){
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Oui" onclick="onClickAdh('+uid+','+pid+')" checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Oui" onclick="onClickAdh('+uid+','+pid+')"/> Oui ';
+            }
+        }
+
+        function boutonAdhNon(is_adh, uid, pid){
+            if (is_adh == true){
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Non" onclick="onClickAdh('+uid+','+pid+')"/> Non ';
+            } else {
+                return '<input type="radio" name="isAdhérent_'+uid+'_'+pid+'" value="Non" onclick="onClickAdh('+uid+','+pid+')" checked/> Non ';
+            }
+        }
+
+        function boutonCoachOui(is_coach, uid, pid){
+            console.log('click adh oui');
+            if (is_coach == true){
+                return '<input type="radio" name="isCoach_'+uid+'_'+pid+'" value="Oui" onclick="onClickCoach('+uid+','+pid+')" checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isCoach_'+uid+'_'+pid+'" value="Oui" onclick="onClickCoach('+uid+','+pid+')"/> Oui ';
+            }
+        }
+
+        function boutonCoachNon(is_coach, uid, pid){
+            if (is_coach == true){
+                return '<input type="radio" name="isCoach_'+uid+'_'+pid+'" value="Non" onclick="onClickCoach('+uid+','+pid+')"/> Non';
+            } else {
+                return '<input type="radio" name="isCoach_'+uid+'_'+pid+'" value="Non" onclick="onClickCoach('+uid+','+pid+')" checked/> Non';
+            }
+        }
+
+        function boutonprtOui(is_prt, uid, pid){
+            if (is_prt == true){
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Oui"  checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Oui" /> Oui ';
+            }
+        }
+
+        function boutonprtNon(is_prt, uid, pid){
+            if (is_prt == true){
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Non" /> Non ';
+            } else {
+                return '<input type="radio" name="isParent_'+uid+'_'+pid+'" value="Non" checked/> Non ';
+            }
+        }
+
+        function boutonComiteOui(in_comite, uid, pid){
+            if (in_comite == true){
+                return '<input type="radio" name="isComité_'+uid+'_'+pid+'" value="Oui" checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isComité_'+uid+'_'+pid+'" value="Oui"/> Oui ';
+            }
+        }
+
+        function boutonComiteNon(in_comite, uid, pid){
+            if (in_comite == true){
+                return '<input type="radio" name="isComité_'+uid+'_'+pid+'" value="Non"/> Non ';
+            } else {
+                return '<input type="radio" name="isComité_'+uid+'_'+pid+'" value="Non" checked/> Non ';
+            }
+        }
+
+        function boutonAdminOui(is_admin, uid, pid){
+            if (is_admin == true){
+                return '<input type="radio" name="isAdmin_'+uid+'_'+pid+'" value="Oui" checked/> Oui ';
+            } else {
+                return '<input type="radio" name="isAdmin_'+uid+'_'+pid+'" value="Oui"/> Oui ';
+            }
+        }
+
+        function boutonAdminNon(is_admin, uid, pid){
+            if (is_admin == true){
+                return '<input type="radio" name="isAdmin_'+uid+'_'+pid+'" value="Non"/> Non ';
+            } else {
+                return '<input type="radio" name="isAdmin_'+uid+'_'+pid+'" value="Non" checked/> Non ';
+            }
+        }
+
+        function onClickAdh (uid, pid){
+            //Fonction qui permet de rendre visible ou non la liste ds groupes selon que l'utilisateur soit définit en tant qu'adhérent ou non
+            var valueAdhRadio = valueBoutonRadio ('isAdhérent_'+uid+'_'+pid+'');
+            //console.log('isAdhérent_'+uid+'_'+pid+' =>'+valueAdhRadio);
+            if (valueAdhRadio == 'Oui') {
+            //C'est un nouvel adhérent, on affiche la partie concernant les adhérents
+                document.getElementById('groupeAdh_'+uid+'_'+pid+'').style.display = "block";
+                //console.log(document.getElementById('groupeAdh_'+uid+'_'+pid+'').style.display)
+            } else {
+            //C'est seulement un parent
+                document.getElementById('groupeAdh_'+uid+'_'+pid+'').style.display = "none";
+            }
+        }
+
+        function onClickCoach (uid, pid){
+            //Fonction qui permet de rendre visible ou non la liste ds groupes selon que l'utilisateur soit définit en tant qu'adhérent ou non
+            var valueCoachRadio = valueBoutonRadio ('isCoach_'+uid+'_'+pid+'');
+            //console.log('isCoach_'+uid+'_'+pid+' => '+valueCoachRadio);
+            if (valueCoachRadio == 'Oui') {
+            //C'est un nouvel adhérent, on affiche la partie concernant les adhérents
+            console.log('In oui');
+                document.getElementById('groupeCoach_'+uid+'_'+pid+'').style.display = "block";
+            } else {
+            //C'est seulement un parent
+                document.getElementById('groupeCoach_'+uid+'_'+pid+'').style.display = "none";
+            }
+            //console.log(document.getElementById('groupeCoach_'+uid+'_'+pid+'').style.display);
+        }
+
+        function valueBoutonRadio (nameBouton){
+            var radios = document.getElementsByName(nameBouton);
+            var valeur = undefined;
+            for(var i = 0; i < radios.length; i++){
+                if(radios[i].checked){
+                    valeur = radios[i].value;
+                }
+            }
+            return valeur;
+        }
+
+        var dataSelect = null;
+
+/**     Gestion des membres de groupes      **/
+        function createChoixGroupeMembreDiv(uid, pid, index, groupeMembre){
+            console.log('groupe en traine = '+groupeMembre);
+            var findGroupeMembre = false;
+            htmlSelect ='<div id="divChoixGroupeAdh_'+uid+'_'+pid+'_'+index+'" onchange="changePreviousGroupeMembre('+uid+','+pid+','+index+')"><SELECT name="choixGroupeAdh_'+uid+'_'+pid+'" id="choixGroupeAdh_'+uid+'_'+pid+'_'+index+'" style="margin-bottom : 5px;">';
+            for (var i = 0; i<dataSelect.length; i++){
+                if (groupeMembre == dataSelect[i]['nom']){
+                    console.log(groupeMembre == dataSelect[i]['nom']);
+                    htmlSelect+='<OPTION value="'+dataSelect[i]['nom']+'" selected>'+dataSelect[i]['nom'];
+                    findGroupeMembre = true;
+                } else {
+                    htmlSelect+='<OPTION value="'+dataSelect[i]['nom']+'">'+dataSelect[i]['nom'];
+                }
+            }
+            if (findGroupeMembre) {
+                htmlSelect+='<OPTION>Choisissez le groupe';
+            } else {
+                htmlSelect+='<OPTION selected>Choisissez le groupe';
+            }
+            htmlSelect += '</SELECT></div>';
+            //On définit la div de groupeCoach
+            console.log(htmlSelect);
+            $('#groupeAdh_'+uid+'_'+pid+'').append(htmlSelect);
+        }
+
+        function choixGroupeAdhérent(uid, pid, groupesMembres){
+            console.log('groupes membres: '+groupesMembres);
+            if (dataSelect != null){
+                groupesName = nbGroupes(groupesMembres);
+                nbGroupe = ((groupesName == null)? 0 : (groupesName.length));
+                console.log('Nb groupes entrainés ='+ groupesName);
+                htmlSelect='';
+                for (var j = 0; j<nbGroupe; j++ ) {
+                    //On change ici-> si pas de groupe sélectionné, on écrase la div i pas celle de la div i+1 à partir de cette div modifié. Et on supprime la dernière. Sinon, on ne fait rien
+                    console.log("appel create div");
+                    createChoixGroupeMembreDiv(uid, pid, j, groupesName[j]);
+                }//Et on ajoute un champs vide permettant de définir un nouveau groupe entrané par l'utilisateur
+                console.log(((groupesName == null)? 1 : (groupesName.length+1)));
+                //On change ici-> si  groupe sélectionné, on rajoute une nouvelle div à l'ensemble de cette partie. Sinon, on ne fait rien!
+                createChoixGroupeMembreDiv(uid, pid, nbGroupe, "");
+            }
+        }
+
+        function changePreviousGroupeMembre(uid, pid, index){
+            var elements = document.getElementsByName('choixGroupeAdh_'+uid+'_'+pid+'')
+            var nbElements = elements.length;
+            //Récupère la valeur du select modifié
+            console.log('changement'+uid+'_'+pid+'_'+index+'');
+            var valueGroupe = getSelectValue('choixGroupeAdh_'+uid+'_'+pid+'_'+index+'');
+            console.log(valueGroupe);
+            if (valueGroupe == "Choisissez le groupe"){
+                console.log(valueGroupe);
+                for (var i = index; i<(nbElements-1); i++){
+                    //On remplace le select n°i par le contenu du select n°i+1. Pour cela, on :
+                    //Supprime la div n°i
+                    $('#divChoixGroupeAdh_'+uid+'_'+pid+'_'+i+'').remove();
+                    //Recréer la div i avec la nouvelle valeur
+                    createChoixGroupeMembreDiv(uid, pid, i, getSelectValue('choixGroupeAdh_'+uid+'_'+pid+'_'+(i+1)+''));
+                }
+                //On supprime le dernier élément (s'il n'y en a pas qu'un seul)
+                if (nbElements != 1) {
+                    //On laisse toujours un élément de libre
+                    $('#divChoixGroupeAdh_'+uid+'_'+pid+'_'+(nbElements-1)+'').remove();
+                }
+            } else {
+                console.log('modif n°'+index+' avec +'+nbElements+' élements');
+                //On a ajouté un groupe a entrainé pour cet utilisateur
+                //Si on a modifié le dernier champs, il faut en rajouter un nouveau pour pouvoir en rajouter par la suite
+                if (index == nbElements-1){
+                    console.log('dans le if...');
+                    //C'est le dernier champs qui a été remplit
+                    createChoixGroupeMembreDiv(uid, pid, nbElements, '');
+                }
+            }
+        }
+
+/** -----------------------------------------   **/
+
+
+        function createChoixGroupeCoachDiv(uid, pid, index, groupeEntrainé){
+            console.log('groupe en traine = '+groupeEntrainé);
+            var findGroupeEntrainé = false;
+            htmlSelect ='<div id="divChoixGroupeCoach_'+uid+'_'+pid+'_'+index+'" onchange="changePreviousGroupeCoach('+uid+','+pid+','+index+')"><SELECT name="choixGroupeCoach_'+uid+'_'+pid+'" id="choixGroupeCoach_'+uid+'_'+pid+'_'+index+'" style="margin-bottom : 5px;">';
+            for (var i = 0; i<dataSelect.length; i++){
+                if (groupeEntrainé == dataSelect[i]['nom']){
+                    console.log(groupeEntrainé == dataSelect[i]['nom']);
+                    htmlSelect+='<OPTION value="'+dataSelect[i]['nom']+'" selected>'+dataSelect[i]['nom'];
+                    findGroupeEntrainé = true;
+                } else {
+                    htmlSelect+='<OPTION value="'+dataSelect[i]['nom']+'">'+dataSelect[i]['nom'];
+                }
+            }
+            if (findGroupeEntrainé) {
+                htmlSelect+='<OPTION>Choisissez le groupe entrainé';
+            } else {
+                htmlSelect+='<OPTION selected>Choisissez le groupe entrainé';
+            }
+            htmlSelect += '</SELECT></div>';
+            //On définit la div de groupeCoach
+            console.log(htmlSelect);
+            $('#groupeCoach_'+uid+'_'+pid+'').append(htmlSelect);
+        }
+
+        function loadChoixGroupe(){
+            $.post(
+                'http://localhost/JSValAcro/listeGroupe.php',
+                {
+                    //no data
+                },
+                function(data){
+                    console.log(data);
+                    if (data != null){
+                        console.log("Load choix groupe coach");
+                        console.log(dataSelect);
+                        dataSelect = data;
+                        console.log(dataSelect);
+                    }
+                },
+                'json'
+            );
+        }
+
+        function choixGroupeCoach(uid, pid, groupesEntrainés){
+            console.log('groupes entrainé: '+groupesEntrainés);
+            if (dataSelect != null){
+                groupesName = nbGroupes(groupesEntrainés);
+                nbGroupe = ((groupesName == null)? 0 : (groupesName.length));
+                console.log('Nb groupes entrainés ='+ groupesName);
+                htmlSelect='';
+                for (var j = 0; j<nbGroupe; j++ ) {
+                    //On change ici-> si pas de groupe sélectionné, on écrase la div i pas celle de la div i+1 à partir de cette div modifié. Et on supprime la dernière. Sinon, on ne fait rien
+                    console.log("appel create div");
+                    createChoixGroupeCoachDiv(uid, pid, j, groupesName[j]);
+                }//Et on ajoute un champs vide permettant de définir un nouveau groupe entrané par l'utilisateur
+                console.log(((groupesName == null)? 1 : (groupesName.length+1)));
+                //On change ici-> si  groupe sélectionné, on rajoute une nouvelle div à l'ensemble de cette partie. Sinon, on ne fait rien!
+                createChoixGroupeCoachDiv(uid, pid, nbGroupe, "");
+            }
+        }
+
+        function changePreviousGroupeCoach(uid, pid, index){
+            var elements = document.getElementsByName('choixGroupeCoach_'+uid+'_'+pid+'')
+            var nbElements = elements.length;
+            //Récupère la valeur du select modifié
+            console.log('changement'+uid+'_'+pid+'_'+index+'');
+            var valueGroupe = getSelectValue('choixGroupeCoach_'+uid+'_'+pid+'_'+index+'');
+            console.log(valueGroupe);
+            if (valueGroupe == "Choisissez le groupe entrainé"){
+                console.log(valueGroupe);
+                for (var i = index; i<(nbElements-1); i++){
+                    //On remplace le select n°i par le contenu du select n°i+1. Pour cela, on :
+                    //Supprime la div n°i
+                    $('#divChoixGroupeCoach_'+uid+'_'+pid+'_'+i+'').remove();
+                    //Recréer la div i avec la nouvelle valeur
+                    createChoixGroupeCoachDiv(uid, pid, i, getSelectValue('choixGroupeCoach_'+uid+'_'+pid+'_'+(i+1)+''));
+                }
+                //On supprime le dernier élément (s'il n'y en a pas qu'un seul)
+                if (nbElements != 1) {
+                    //On laisse toujours un élément de libre
+                    $('#divChoixGroupeCoach_'+uid+'_'+pid+'_'+(nbElements-1)+'').remove();
+                }
+            } else {
+                console.log('modif n°'+index+' avec +'+nbElements+' élements');
+                //On a ajouté un groupe a entrainé pour cet utilisateur
+                //Si on a modifié le dernier champs, il faut en rajouter un nouveau pour pouvoir en rajouter par la suite
+                if (index == nbElements-1){
+                    console.log('dans le if...');
+                    //C'est le dernier champs qui a été remplit
+                    createChoixGroupeCoachDiv(uid, pid, nbElements, '');
+                }
+            }
+        }
+
+        function majchoixGroupeCoach(uid, pid){
+            var elements = document.getElementsByName('choixGroupeCoach_'+uid+'_'+pid+'')
+            var nbElements = elements.length;
+
+        }
+
+        function nbGroupes(string){
+            console.log(string);
+            if ((string == null) || (string == undefined)) {
+                return null;
+            } else {
+                return string.split("||");
+            }
+        }
+
+    function showForm(uid, pid){
+        console.log('show form');
+        //Lorsqu'on a demande d'afficher le formulaire, c'est obligatoirement a partie avec les boutons qui est visible
+        document.getElementById('showBouton_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('showForm_'+uid+'_'+pid+'').style.display = "block";
+    }
+    function Annuler(uid, pid){
+        document.getElementById('showForm_'+uid+'_'+pid+'').style.display = "none";
+        document.getElementById('showBouton_'+uid+'_'+pid+'').style.display = "block";
+    }
+
+    function getGroupeMembre(uid, pid){
+        var res = "";
+        elts = document.getElementsByName('choixGroupeAdh_'+uid+'_'+pid);
+        nbElts = elts.length;
+        for (var i =1; i <= nbElts; i++){
+            if (i != 1){
+                res+="||"
+            }
+            res += getSelectValue('choixGroupeAdh_'+uid+'_'+pid+'_'+(i-1));
+        }
+        return res;
+    }
+
+    function getGroupeCoaché(uid, pid){
+        var res = "";
+        elts = document.getElementsByName('choixGroupeCoach_'+uid+'_'+pid);
+        nbElts = elts.length;
+        for (var i =1; i <= nbElts; i++){
+            if (i != 1){
+                res+="||"
+            }
+            res += getSelectValue('choixGroupeCoach_'+uid+'_'+pid+'_'+(i-1));
+        }
+        return res;
+    }
+
+    function Modifier(uid, pid){
+        //On appel les modifications,
+        xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost/JSValAcro/modifProfil.php");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+                //Requête entièrement terminé
+                alertPopUp(xhr.responseText);
+                Annuler(uid, pid);
+            }
+            else {
+                //Do nothing
+            }
+        }
+        var form = new FormData();
+        form.append("uid", uid);
+        form.append("pid",pid);
+        form.append("isAdh", valueBoutonRadio("isAdhérent_"+uid+"_"+pid));
+        form.append("groupeMembre", getGroupeMembre(uid, pid));
+        //form.append("groupeMembre",document.getElementById('groupeAdh_'+uid+'_'+pid+'').value);
+        form.append("isParent", valueBoutonRadio("isParent_"+uid+"_"+pid));
+        form.append("isCoach", valueBoutonRadio("isCoach_"+uid+"_"+pid));
+        form.append("groupeEntrainé", getGroupeCoaché(uid, pid));
+        form.append("isComite", valueBoutonRadio("isComité_"+uid+"_"+pid));
+        form.append("isAdmin", valueBoutonRadio("isAdmin_"+uid+"_"+pid));
+        xhr.send(form);
+    }
+
+</script>

@@ -1,0 +1,84 @@
+
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+        <div id="dismiss">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <div class="sidebar-header">
+            <br><br><br>
+            <center>
+                <img src="img/valacro_logo.png" style="height: 150px; width: 150px;">
+            </center>
+        </div>
+
+        <ul class="list-unstyled components">
+            <p style="font-size: 14px;">Association de Gym Acrobatique&#013;&#010;Rue lomprez, 59300 Valenciennes</p>
+            <!-- Acceuil présent quelque soit le statut de la personne-->
+                <li class="active">
+                    <a href="home.html">Accueil</a>
+                </li>
+            <!-- Mon Profil présent quelque soit le statut de la personne-->
+                <li>
+                    <a href="page_myprofile.html">Mon Profil</a>
+                </li>
+            <!-- Groupes et Entrainements présent quelque soit le statut de la personne-->
+                <li>
+                    <a href="page_groupes.html">Groupes et Entraînements</a>
+                    <!--<a href="groupe.html">Groupes et Entraînements</a>-->
+                </li>
+            <!-- Liste des comptes validés -->
+            <div id="li_comptes" style="display: none;">
+                <li>
+                    <a href="admin_list_parent.html">Liste des comptes</a>
+                </li>
+            </div>
+            <!--Liste des adhérets présente pour les membres du comité et l'admin-->
+            <!--
+            <div id="li_adh" style="display: none;">
+                <li>
+                    <a href="admin_list_adh.html">Liste Adhérents</a>
+                </li>
+            </div>
+            -->
+            <!--Liste des parents présente pour les membres du comité et l'admin-->
+            <!--
+            <div id="li_parent" style="display: none;">
+                <li>
+                    <a href="admin_list_parent.html">Liste Parents</a>
+                </li>
+            </div>
+            -->
+            <!--Liste des comptes à valider -->
+            <div id="li_valid_profil" style="display: none;">
+                <li>
+                    <a href="admin_list_noValidProfil.html"><div id="li_valid_profil_Number">Comptes à valider</div></a>
+                </li>
+            </div>
+            <!--Messagerie présente pour coach, membre du comité et admin-->
+            <div id="Messagerie" style="display: none;">
+                <li>
+                    <a href="page_messages.html">Messagerie</a>
+                </li>
+            </div>
+
+        </ul>
+        <ul style="list-style: none; margin-left: -40px;">
+            <li>
+                <a href="page_contact.html">Nous Contacter</a>
+            </li>
+            <li>
+                <a href="index.html" onclick="        
+            $.post(
+                'deconnect.php',
+                {
+                },
+                function(data){
+                    console.log('Log out in progress');
+                    console.log(data);
+                },
+                'text'
+             );">Se Déconnecter</a>
+            </li>
+        </ul>
+    </nav>

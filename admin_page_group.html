@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Création d'un nouveau groupe</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/popup.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    
+    <style type="text/css">
+        table {
+            border-collapse: separate;
+            border-spacing: 10px;
+        }
+    </style>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark" style="margin-right: 15px;">
+                        <i class="fas fa-align-left"></i>
+                    </button> 
+                    <div id="Back">                   
+                        <a href="page_groupes.html" class="btn btn-dark">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                    </div>
+                    <b class="navtxt"><div id="GroupName">Nom du groupe</div></b>
+		        </div>
+            </nav>
+        </div>
+
+        <div class="container">
+
+                <center>
+                    <div id="NomGroupe"><input type="text" id="GroupNameInput" placeholder="Nom du groupe" id=""></div>
+                    <br><br>
+                    <h3><div id="CoachsGroup"> Aucun coach de défini </div></h3>
+                    <div id="Entrainements"></div>
+                    <br><br>
+                    <div id="AddEntrainement"><input type="button" class="btn btn-dark" value="Ajouter un nouvel entrainement" onclick="createEntrainementDiv(document.getElementsByName('divEntrainement').length, '');"></div>
+                    <div><input type="button" style="margin-top: 5px;width:200px;" class="btn btn-dark" value="Valider" onclick="submitEntrainements()"></div>
+                </center>
+        </div>
+                    <div id="popup" class="modal">
+                        <!-- Contenu de la fenêtre -->
+                    </div>
+
+
+                    <div id="popupSubmit" class="modal">
+                        <!-- Contenu de la fenêtre -->
+                        <div class="modal-content">
+                            <div id="closeAlertPopUp"></div> <!-- croix pour fermer la pop up-->
+                            <center>
+                            <p><div id="message"></div></p>
+                            </center>
+                        </div>
+                    </div>          
+    </div>
+
+    <br><br>
+
+    <div class="overlay"></div>
+</body>
+
+</html>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+
+        function Back(){
+            id = Number(extractUrlParams()['id_groupe']);
+            if (id+'' !== 'NaN'){
+                console.log('Dans la boucle ou id définit');
+                $('#Back').html('<a href="page_group.html?id_groupe='+parseInt(id, 10)+'" class="btn btn-dark"><i class="fas fa-arrow-left"></i></a>');
+            } else {
+                console.log('Dans la boucle ou id non définit');
+            }
+        }
+
+        $(document).ready(function () {
+            Back();
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    
+<script>
+
+        function initPopUp(heure, min, id /*id de la div de l'heure que l'on modifie*/) { 
+            htmlPopUpHeure = '';
+            if ((heure==null) || (min==null) || (heure==undefined) || (min==undefined)) {
+                htmlPopUpHeure ='<div class="modal-content"><span class="close" style="text-align: right;">&times;</span> <!-- croix pour fermer la pop up--><center><p> <table><thead><td> Heures </td><td> Minutes </td></thead><tbody><td><input type="number" id="heurePopUp" min="0" max="24" placeholder="hh"/></td><td><input type="number" id="minutePopUp" min="0" max="59" placeholder="mm"/></td></tbody><tfoot><td colspan="1"></td><td colspan="1" style="text-align:center; cursor:pointer;" onclick="setHeureDiv(';
+                htmlPopUpHeure+="'"+id+"'";
+                htmlPopUpHeure+=')">Valider</td></tfoot></table></p></center></div>';
+            } else {
+                htmlPopUpHeure ='<div class="modal-content"><span class="close" style="text-align: right;">&times;</span> <!-- croix pour fermer la pop up--><center><p> <table><thead><td> Heures </td><td> Minutes </td></thead><tbody><td><input type="number" id="heurePopUp" min="0" max="24" placeholder="hh" value="'+heure+'"/></td><td><input type="number" id="minutePopUp" min="0" max="59" placeholder="mm" value="'+min+'"/></td></tbody><tfoot><td colspan="1"></td><td colspan="1" style="text-align:center; cursor:pointer;" onclick="setHeureDiv(';
+                htmlPopUpHeure+="'"+id+"'";
+                htmlPopUpHeure+=')">Valider</td></tfoot></table></p></center></div>';
+            }
+            $('#popup').html(htmlPopUpHeure);
+            document.getElementById('popup').style.display="block";
+                    // Get the <span> element that closes the modal
+            span = document.getElementsByClassName("close")[0];
+                // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                closePopUp();
+            }
+        }
+    function closePopUp(){
+        document.getElementById("popup").style.display = "none";
+    }
+
+    function setHeureDiv (id){
+        console.log(id);
+        heure = document.getElementById("heurePopUp").value;
+        min = document.getElementById("minutePopUp").value;
+        $('#'+id).html(heure+':'+min);
+        closePopUp();
+    }
+
+    function isConnected() {
+        $.post(
+        'http://localhost/JSValAcro/isConnected.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log(data);
+            if (data == "Success") {
+                loader();
+            }
+            else {
+                //User must be connected
+                document.location.href="index.html";
+            }
+        },
+        'text'
+    );};
+
+    function loader() {$.post(
+        'http://localhost/JSValAcro/load_group_infos.php',
+        {
+            id : extractUrlParams()['id_groupe']
+        },
+        function(data) {
+            var html ='';
+            //Do something
+            console.log(data);
+            /**/
+            if (data != null) {
+                //On change le titre de la page
+                $('#GroupName').html(data['groupeName']);
+                $('#NomGroupe').html('<input id="GroupNameInput" type="text" placeholder="Nom du groupe" value="'+data['groupeName']+'">');
+                //On affiche les différents coachs
+                var coachIdentity = decodeConcatParms(data['identity']);
+                html = '';
+                if ((coachIdentity != null) && (coachIdentity != undefined) && (coachIdentity.length > 0)){
+                    html += 'Coach'+((coachIdentity.length == 1)? '': 's')+' :<br>';
+                    html+='<center>'
+                    for (var i = 0; i < coachIdentity.length; i++){
+                        html+='<div>'+coachIdentity[i]+'</div>';
+                    }
+                    html+='</center>';
+                } else {
+                    html += "Aucun coach n'est associé à ce groupe" 
+                }
+                $('#CoachsGroup').html(html);
+            }
+            else {
+                html = ("<p>Erreur lors du chargement</p>");
+            }
+            $('#result').html(html); //C'est le dernier appel de cette fonction qui détermine ce qui se trouve dans la div d'id 'result'
+            loaderEntrainement();
+            /**/
+        },
+        'json'
+    );};
+
+    function decodeConcatParms (parm){
+        console.log(parm);
+        if ((parm == null) || (parm == undefined)) {
+            return null;
+        } else {
+            return parm.split("||");
+        }
+    }
+    function loaderEntrainement() {$.post(
+        'http://localhost/JSValAcro/load_group_entrainement.php',
+        {
+            id : extractUrlParams()['id_groupe']
+        },
+        function(data) {
+            var html ='';
+            //Do something
+            console.log(data);
+            /**/
+            html=''
+            if (data != null) {
+                initEntrainement(data);
+            }
+            else {
+                html = ("<p>Erreur lors du chargement</p>");
+            }
+            html+='';
+            $('#entrainement').html(html);
+                            //On créer la fenêtre permettant d'initialiser les heures
+        },
+        'json'
+    );};
+
+    function extractUrlParams() {
+        //On apelle cette fonction seulement si l'utilisateur est connecté! 
+        var parms = [];
+        var url = location.search.substring(1).split('&');
+        //location.search donne la partie de l'url situé après le nom de la page (?....)
+        //On exclut le premier caractère de cette partie, qui est ?.
+        //On compte le nombre de paramètre passé par la m"thode GET grâce au split('&') où & sépare ces derniers.
+        for (var i=0; i<url.length; i++) {
+            //url[i] contient un data de type "paramètre=value"
+            var idETparam = url[i].split('=');
+            parms[idETparam[0]]=idETparam[1];
+            //si il apelle la page avec des paramètres mal définit, (ex: ..?id_event&other_parm=2), on retrouve alors un undefined en valeur.
+        }
+        console.log(parms);
+        return parms;
+    };
+
+
+    /* Fonctions permettant la gestion des entrainements */
+
+        var dataSelect = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
+        function createEntrainementDiv(index, dayEntrainement, HbeginEntrainement,MbeginEntrainement, HendEntrainement, MendEntrainement){
+            htmlSelect = ''
+            if ( (dayEntrainement == null) || (dayEntrainement == undefined) || (HbeginEntrainement==null) || (HbeginEntrainement==undefined) ||(MbeginEntrainement == null) || (HendEntrainement==null) || (MendEntrainement==null) ||(MbeginEntrainement == undefined) || (HendEntrainement==undefined) || (MendEntrainement==undefined)) {
+                htmlSelect ='<div id="divEntrainement_'+index+'" name="divEntrainement"><SELECT id="DayEntrainement_'+index+'" style="margin-top : 5px; margin-bottom: 15px;">';
+                findDay = false;
+                for (var i = 0; i<dataSelect.length; i++){
+                    htmlSelect+='<OPTION value="'+dataSelect[i]+'">'+dataSelect[i];
+                }
+                htmlSelect+="<OPTION selected>Choisissez le jour de l'entrainement";
+                htmlSelect += '</SELECT>';
+                htmlSelect += '<table>'
+                htmlSelect += '<tr>'
+                htmlSelect += '<td><div id="Debut_'+index+'">'+ 'hh'+':'+'mm'+'</div></td>';
+                htmlSelect+='<td><input style="width:200px;" class="btn btn-dark" type="button" value="';
+                htmlSelect+="Entrer l'heure de début";
+                htmlSelect+='" onclick="setHeure(';
+                htmlSelect+="'Debut'";
+                htmlSelect+=','+index+')" /></td></tr>';
+                htmlSelect+= '<tr><td><div id="Fin_'+index+'">'+ 'hh'+':'+'mm'+'</div></td>';
+                htmlSelect+='<td><input style="width:200px;" class="btn btn-dark" type="button" value="';
+                htmlSelect+="Entrer l'heure de fin";
+                htmlSelect+='" onclick="setHeure(';
+                htmlSelect+="'Fin'";
+                htmlSelect+=','+index+')" /></td></tr>';
+                htmlSelect +='</table>';
+            } else {
+                htmlSelect ='<br><br><div id="divEntrainement_'+index+'" name="divEntrainement"><SELECT id="DayEntrainement_'+index+'" style="margin-top : 5px;margin-bottom:15px;">';
+                findDay = false;
+                for (var i = 0; i<dataSelect.length; i++){
+                    if (dayEntrainement == dataSelect[i]){
+                        htmlSelect+='<OPTION value="'+dataSelect[i]+'" selected>'+dataSelect[i];
+                        findDay = true;
+                    } else {
+                        htmlSelect+='<OPTION value="'+dataSelect[i]+'">'+dataSelect[i];
+                    }
+                }
+                if (findDay) {
+                    htmlSelect+="<OPTION>Choisissez le jour de l'entrainement";
+                } else {
+                    htmlSelect+="<OPTION selected>Choisissez le jour de l'entrainement";
+                }
+                htmlSelect += '</SELECT>';
+                htmlSelect += '<table>'
+                htmlSelect += '<tr>'
+                htmlSelect += '<td><div id="Debut_'+index+'">'+ HbeginEntrainement+':'+MbeginEntrainement+'</div></td>';
+                htmlSelect+='<td><input style="width:200px;" class="btn btn-dark" type="button" value="';
+                htmlSelect+="Entrer l'heure de début";
+                htmlSelect+='" onclick="setHeure(';
+                htmlSelect+="'Debut'";
+                htmlSelect+=','+index+')" /></td></tr>';
+                htmlSelect+= '<tr><td><div id="Fin_'+index+'">'+ HendEntrainement+':'+MendEntrainement+'</div></td>';
+                htmlSelect+='<td><input style="width:200px;" class="btn btn-dark" type="button" value="';
+                htmlSelect+="Entrer l'heure de fin";
+                htmlSelect+='" onclick="setHeure(';
+                htmlSelect+="'Fin'";
+                htmlSelect+=','+index+')" /></td></tr>';
+                htmlSelect +='</table>';
+            //On définit la div de l'entrainement
+            }
+            htmlSelect += '<div><input type="button" style="width:200px;" class="btn btn-dark" value="';
+            htmlSelect+="Supprimer l'entrainement";
+            htmlSelect+='" onclick="deleteEntrainement('+index+');"></div>';
+            console.log(htmlSelect);
+            $('#Entrainements').append(htmlSelect);
+        }
+
+        function deleteEntrainement(index){
+            console.log("Suppression d'un entrainement");
+            nbEntrainements = document.getElementsByName("divEntrainement").length;
+            for (var i = index; i < nbEntrainements - 1; i++){
+                console.log((i+1));
+                $('#divEntrainement_'+i).remove();
+                dayEntrainement = getSelectValue('DayEntrainement_'+(i+1)+'');
+                console.log(dayEntrainement);
+                console.log(document.getElementById('Debut_'+(i+1)+''));
+                console.log(document.getElementById('Debut_'+(i+1)+'').innerHTML);
+                heure_debut = (document.getElementById('Debut_'+(i+1)+'').innerHTML).split(":");
+                heure_fin = (document.getElementById('Fin_'+(i+1)+'').innerHTML).split(":");
+                createEntrainementDiv(i, dayEntrainement, heure_debut[0],heure_debut[1], heure_fin[0], heure_fin[1]);
+            }
+            $('#divEntrainement_'+(nbEntrainements-1)).remove();
+        }
+
+        function getSelectValue(selectId)
+        {
+            /**On récupère l'élement html <select>*/
+            var selectElmt = document.getElementById(selectId);
+            /**
+            selectElmt.options correspond au tableau des balises <option> du select
+            selectElmt.selectedIndex correspond à l'index du tableau options qui est actuellement sélectionné
+            */
+            return selectElmt.options[selectElmt.selectedIndex].value;
+        }
+
+        function setHeure (nom, index){
+            horaire = document.getElementById(nom+'_'+index).innerHTML.split(":");
+            console.log(horaire);
+            initPopUp(horaire[0],horaire[1],nom+'_'+index);
+        }
+
+        function initEntrainement (dataEntrainements){
+            console.log(dataEntrainements);
+            if (dataEntrainements != null){
+                for (var j = 0; j<dataEntrainements.length; j++ ) {
+                    heure_debut = dataEntrainements[j]['heure_debut'].split(":");
+                    heure_fin = dataEntrainements[j]['heure_fin'].split(":");
+                    //On change ici-> si pas de groupe sélectionné, on écrase la div i pas celle de la div i+1 à partir de cette div modifié. Et on supprime la dernière. Sinon, on ne fait rien
+                    createEntrainementDiv(j, dataEntrainements[j]['day'], heure_debut[0], heure_debut[1], heure_fin[0], heure_fin[1]);
+                }//Et on ajoute un champs vide permettant de définir un nouveau groupe entrané par l'utilisateur
+            }
+        }
+
+    function inArray (data, array){
+        res = false;
+        nbElts = array.length;
+        var i = 0;
+        while ((i < nbElts) && (res == false)){
+            res = (data == array[i]);
+            i++
+        }
+        return res;
+    }
+
+    function lireEntrainementInfo (index){
+        dayEntrainement = getSelectValue('DayEntrainement_'+index);
+        heure_debut = document.getElementById('Debut_'+index).innerHTML.split(":");
+        heure_fin = document.getElementById('Fin_'+index).innerHTML.split(":");
+        if ( (inArray(dayEntrainement, dataSelect)) && (parseInt(heure_debut[0], 10)!= NaN) && (parseInt(heure_debut[1], 10)!= NaN) && (parseInt(heure_fin[0], 10)!= NaN) && (parseInt(heure_fin[1], 10)!= NaN)) {
+            return (''+dayEntrainement+';'+document.getElementById('Debut_'+index).innerHTML+';'+document.getElementById('Fin_'+index).innerHTML+'');
+        } else {
+            return null;
+        }
+    }
+
+    function decodeEntrainements(){
+        nbEntrainements = document.getElementsByName('divEntrainement').length;
+        console.log(nbEntrainements);
+        entrainement_info = '';
+        for (var i = 0; i <nbEntrainements; i++){
+            var string = lireEntrainementInfo(i);
+            if (string == null){
+                return null;
+            } else {
+                entrainement_info += string+'||';
+            }
+        } 
+        return entrainement_info;
+    }
+
+    function submitEntrainements(){
+        entrainements = decodeEntrainements();
+        nomGroup = document.getElementById('GroupNameInput').value;
+        if (entrainements == null){
+            alertPopUp('Certaines informations sont manquantes au niveau des entrainements');
+        } else if (nomGroup == ''){
+            alertPopUp('Vous devez donner un nom au groupe');
+        } else {
+            //On appel les modifications,
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost/JSValAcro/modifGroupe.php");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 /*La requête est terminée*/ && (xhr.status == 200 || xhr.status == 0)) {
+                    //Requête entièrement terminé
+                    alertPopUp(xhr.responseText);
+                }
+                else {
+                    //Do nothing
+                }
+            }
+            var form = new FormData();
+            form.append("id_groupe", parseInt(extractUrlParams()['id_groupe'], 10));
+            form.append("nom", nomGroup);
+            form.append("entrainements", entrainements);
+            xhr.send(form);
+        }
+    }
+
+    var alert = document.getElementById('popupSubmit');
+    //$quit = document.getElementsById("logoCloseAlertPopUp");
+    function alertPopUp(rep) {
+        var html ='';
+        if ((rep == 'Les mofifications ont été faites') || (rep == "Le groupe "+(document.getElementById('GroupNameInput').value)+" a été créé")) {
+            var id = Number(extractUrlParams()['id_groupe']);
+            console.log('id du groupe = '+id);
+            if (id+'' !== 'NaN' ) {
+                html = '<a href="page_group.html?id_groupe='+id+'"><span id="logoCloseAlertPopUp" class="close" style="text-align: right;">&times;</span></a>';
+            } else {
+                html = '<a href="page_groupes.html"><span class="close" style="text-align: right;" onclick="closeAlertPopUp()";>&times;</span></a>';
+            }
+        } else {
+            html = '<span class="close" style="text-align: right;" onclick="closeAlertPopUp()";>&times;</span>';
+        }
+        $("#closeAlertPopUp").html(html);
+        $("#message").html(rep);
+        alert.style.display = "block";
+    }
+
+    function closeAlertPopUp() {
+        alert.style.display = "none";
+    }
+
+</script>

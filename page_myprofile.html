@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Mon Profil</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body onload="javascript:isConnected();">
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Mon Profil</b><br>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 25px;">
+                    <h4 style="text-align: center; margin-bottom: 15px;"> Profil Actuel</h4>
+                    <center>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td rowspan="5" style="width:25%;"><img style="width: 150px; height: auto;" src="img/poster.jpg"></td>
+                                <td style="width: 50%;"><center><div id="Prénom">Prénom</div></center></td>
+                                <td style="width:25%;"><center><div id="Nom">Nom</div></center></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center;"><div id="NomGroupe">Nom Groupe</div></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center;"><div id="ProfilParent">Profil parent ?</div></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center;"><div id="isCoach">Coach ?</div></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center;"><div id="inComite"> Membre du comité ?</div></td>
+                            </tr>
+                            <tr></tr>
+                            <tr><td colspan="4"><div class="col-md-12" style="text-align: center;">
+                            <div id="ModifProfil"> modifier? </div>
+                            </div></td></tr>
+                            <tr><td colspan="4"><div class="col-md-12" style="text-align: center;">
+                            <div id="ModifPwd"> changer pwd? </div>
+                            </div></td></tr>
+                        </tbody>
+                    </table>
+                    </center>
+                </div>
+                <div class="col-md-12" style="text-align: center; margin-bottom: 15px;"><h4><div id="TitreOtherProfil"></div></h4></div>
+            </div>
+                <center>
+                    <div id="otherProfil"></div>
+                </center>
+            <div class="row">
+                <br><br>
+                <div class="col-md-12" style="text-align: center;">
+                    <div id="Bouton"></div>
+                </div> 
+            </div>
+        </div>
+
+    </div>
+
+    <div class="overlay"></div>
+</body>
+
+</html>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+        });
+    </script>
+
+<script>
+    function isConnected() {$.post(
+            'http://localhost/JSValAcro/isConnected.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    loadMyProfil();
+                }
+                else {
+                    //User must be connected
+                    document.location.href=data;
+                }
+            },
+            'text'
+        );};
+
+    function loadOtherProfil() {
+            console.log('in loader');
+            $.post(
+            'http://localhost/JSValAcro/loadOtherProfil.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log('Autres infos');
+                //Do something
+                console.log(data);
+                if (data != null) {
+                    html="<div class='row'><div class=col-md-12>";
+                        //On ouvre le liste des profils
+                    console.log(location.origin+location.pathname);
+                    if (data.length > 0) {
+                        $('#TitreOtherProfil').html('Autres profils');
+                        html+="<center><table>";
+                        for(var i = 0; i < data.length; i++ ) {
+                            if (i < data.length) {
+                                html+="<tr>"
+                                //Dans ce cas, il s'agit d'afficher un profil existant
+                                html+='<td rowspan="1"><center><div class="product_img"><img style="width: 100px; height: auto;" src="img/poster.jpg"><br></div> <p>'+data[i]["prenom"]+' '+data[i]["nom"]+' <br></p><br></center></td>'; //On affiche la photo de l'utilisateur et son identité
+                                html+='<td><center><!--<a class="btn btn-dark" style="width: 200px;" onclick="changeProfil('+data[i]["profil_id"]+');"><div style="color:white;">Changer pour ce profil</div></a><br><br>--><a href="change_login_pwd.html?profil_id='+data[i]["profil_id"]+'" class="btn btn-dark"><div style="color: white;">Changer le mot de passe</div></a></br></br><a href="page_modifierProfil.html?profil_id='+data[i]["profil_id"]+'" class="btn btn-dark" style="width: 200px;"><div style="color:white;">Informations du profil</div></a></center></td>';//On ajoute un bouton pour modifier ces infos!
+                                html+="</tr>";
+                            }
+                        }
+                        html+="</center></table>";
+                    }
+                    html+='</div></div>'; //On ferme l'affichage des profils.
+                    $('#otherProfil').html(html); //C'est le dernier appel de cette fonction qui détermine ce qui se trouve dans la div d'id 'result'
+                }
+                $('#Bouton').html('<a href="page_addEnfant.html" class="btn btn-dark">Créer un nouveau profil</a><br></br><a href="linkProfil.html" class="btn btn-dark">Lier un profil existant</a>');
+                console.log("passé");
+            },
+            'json'
+        );};
+
+    function loadMyProfil() {
+        console.log('in loader');
+        $.post(
+        'http://localhost/JSValAcro/loadMyProfil.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log("Mes infos");
+            //Do something
+            console.log(data);
+            console.log(data['nom']);console.log(data['valid_profil']);
+            if (data != null) {
+                $('#Prénom').html(data['prenom']);
+                $('#Nom').html(data['nom']);
+                if ((data['profil_adherent']) == 1) {
+                    //Dans ce cas, le profil a été validé par un admin et a été associé à un groupe!
+                    $('#NomGroupe').html(data['nom_groupe']);
+                }
+                else {
+                    $('#NomGroupe').html('');
+                }
+                //On aurait pu faire un isset de data['nom_groupe']
+                $('#ProfilParent').html((data['profil_parent'] == 1)? 'Profil parent' : '');
+                $('#isCoach').html((data['is_coach'] == 1)? ' Coach ' : '');
+                $('#inComite').html((data['in_comite'] == 1)? ' Membre du comité ' : '');
+                //On initialise le bouton pour modifier le profil actuel
+                var html = '<a href="page_modifierProfil.html?profil_id='+data["profil_id"]+'" class="btn btn-dark" style="width: 200px;"><div style="color: white;">Informations du profil</div></a>';
+                $('#ModifProfil').html(html);
+                $('#ModifPwd').html('<a href="change_login_pwd.html?profil_id='+data["profil_id"]+'" class="btn btn-dark" style="width: 200px;"><div style="color: white;">Changer le mot de passe</div></a>');
+                if (data['profil_parent'] == 1){
+                    loadOtherProfil();
+                }
+            }
+        },
+        'json'
+    );};
+
+    function changeProfil(id) {
+        console.log("On change de profil!");
+        $.post(
+        'http://localhost/JSValAcro/change_profil.php',
+        {
+            profil_id : id
+        },
+        function(data) {
+            console.log(id);
+            console.log(data);
+            if (data == "Success") {
+                //On ne fit rien (les liens sont codés en html)
+                document.location.href="page_myprofile.html";
+            }
+            else {
+                //problem
+                alert('Erreur - Veuillez recommencer!');
+            }
+        },
+        'text'
+    );};
+</script>

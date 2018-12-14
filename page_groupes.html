@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Groupes et Entraînements</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Groupes et Entraînements</b>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container">
+            <center>
+                <div id="result"></div>
+                <!--
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card" style="width: 18rem;">
+                          <div class="card-body">
+                            <h5 class="card-title">Nom de groupe</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Nom de coach</h6>
+                            <p class="card-text">Entraînement: <b>Lundi 18h00 - 20h00</b></p>
+                            <a href="page_group.html" class="card-link btn btn-dark">Plus d'informations</a>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card" style="width: 18rem;">
+                          <div class="card-body">
+                            <h5 class="card-title">Nom de groupe</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Nom de coach</h6>
+                            <p class="card-text">Entraînement: <b>Lundi 18h00 - 20h00</b></p>
+                            <a href="page_group.html" class="card-link btn btn-dark">Plus d'informations</a>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                </div>-->
+                <br><br>
+                <div id="AdminActions"></div>
+            </center>
+            
+        </div>
+
+    </div>
+
+    <div class="overlay"></div>
+    
+</body>
+
+</html>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+        });
+    </script>
+
+<script>
+    function isConnected() {$.post(
+        'http://localhost/JSValAcro/isConnected.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log(data);
+            if (data == "Success") {
+                loader();
+            }
+            else {
+                //User must be connected
+                document.location.href="index.html";
+            }
+        },
+        'text'
+    );};
+
+    function haveProfil() {
+        $.post(
+            'http://localhost/JSValAcro/have_profil.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    //Do nothing. User can be here
+                }
+                else {
+                    //User must be connected
+                    document.location.href="select_profil.html";
+                }
+            },
+            'text'
+        );};
+
+    function loader() {$.post(
+        'http://localhost/JSValAcro/load_groupes.php',
+        {
+            //no data()
+        },
+        function(data) {
+            var html ='';
+            //Do something
+            console.log(data);
+            /**/
+            if (data != null) {
+                if (data.length==0) {
+                    html="<p>Aucun groupe</p>";
+                }
+                else {
+                    //On affiche au maximum trois événements sur la largeur de la page (en plein écran). Pour faire un rendu esthétique (pas une affiche complétement à gauche, sans rien à sa droite), on va moduler l'affichage à l'aide de col-lg de bootstrap.
+                    var nbLines = Math.floor(data.length/3);
+                    var res = data.length%3;
+                    var col_lg;
+                    console.log(nbLines);
+                    console.log(res);
+                    html = "<div class='row'><div class='col-lg-12'><h2 style='text-align: center;'>Liste des groupes</h2><br><br></div>"; //On fait la déclaration du code html permettant de lister les événements!
+                    for(var i = 0; i < data.length; i++ ) {
+                        var coachIdentity = decodeConcatParms(data[i]['identity']);
+                        console.log(coachIdentity);
+                        if ((i/3) < nbLines) {col_lg = "col-lg-4";} //on est sur une ligne avec trois évènements
+                        else if (res==2) {col_lg = "col-lg-6";} //il y a deux évènements sur la dernière ligne
+                        else {col_lg="col-lg-12";} //Dans le dernier cas, il n'y a qu'un seul évènement
+                        html+='<div class='+col_lg+' style="margin-bottom: 10px;">';                 
+                        html+='<div class="card" style="width: 18rem;">';
+                        html+='<div class="card-body">';
+                        html+='<h5 class="card-title">'+data[i]['groupeName']+'</h5>';
+                        if ((coachIdentity != null) && (coachIdentity != undefined)){
+                            for (var j = 0; j < coachIdentity.length; j++){
+                                html+='<h6 class="card-subtitle mb-2 text-muted">'+coachIdentity[j]+'</h6>';
+                            }
+                        }
+                        html+="<a href='page_group.html?id_groupe="+data[i]['groupID']+"'><input type='button' class='btn btn-dark'";
+                        html+='value="'+("Plus d'information")+'"';
+                        html+= "style='width: auto;'/></a>";
+                        html+='</div>';
+                        html+='</div>';
+                        html+='</div>';
+                    }
+                    html+='</div>'; //On ferme l'affichage des groupes
+                }}
+            else {
+                html = ("<p>Vous devez être connecté à un profil pour voir les groupes</p>");
+            }
+            $('#result').html(html); //C'est le dernier appel de cette fonction qui détermine ce qui se trouve dans la div d'id 'result'
+            /**/
+            loaderAdminActions();
+        },
+        'json'
+    );};
+
+    function decodeConcatParms (parm){
+        console.log(parm);
+        if ((parm == null) || (parm == undefined)) {
+            return null;
+        } else {
+            return parm.split("||");
+        }
+    }
+    //Actions de l'administrateur//
+    function loaderAdminActions(){$.post(
+        'http://localhost/JSValAcro/infosSession.php',
+        {
+
+        },
+        function(data) {
+            var html ='';
+            //Do something
+            console.log(data);
+            html = '';
+            is_admin = getStatus("is_admin", data);
+            if ((is_admin != null) && (is_admin == 1)) {
+                console.log('is_admin, YES');
+                html += '<center><input style="margin-bottom:5px; width:250px;" type="button" class="btn btn-dark" value="Ajouter un nouveau groupe" onclick="add()"></center>'
+            }
+            $('#AdminActions').html(html); //C'est le dernier appel de cette fonction qui détermine ce qui se trouve dans la div d'id 'result'
+            /**/
+        },
+        'text'
+    );}
+
+    function add(){
+        document.location.href = "admin_page_group.html";
+    }
+
+    function decodeReponse(string){
+        var res = string.split('||');
+        for (var i = 0; i < res.length; i++){
+            res[i] = res[i].split("=");
+            try{
+                res[i][1] = parseInt(res[i][1], 2);
+                
+            } catch (error) {
+                return null;
+            }
+        }
+        return (res);
+        //On retourne le tableau à deux dimensions semblables à une variable de type JSON
+    }
+
+    function getStatus (status, string){
+        statuUser = decodeReponse(string);
+        for (var i = 0; i<statuUser.length; i++){
+            if (status == statuUser[i][0]){
+                return statuUser[i][1];
+            }
+        }
+        return null;
+    }
+</script>

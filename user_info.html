@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Identité</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <!-- Modal -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+</head>
+
+<body onload="javascript:isConnected();">
+
+    <div class="wrapper">
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <div id="Back"> Back </div>
+                    <b class="navtxt">Profil</b>
+<!--
+                    <div class="dropdown dropleft">
+                      <a class="btn btn-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup  ="true" aria-expanded="false">
+                        <p class="fa fa-ellipsis-h"></p>
+                      </a>
+                      
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="#">Voir infos compte</a>
+                        <a class="dropdown-item" href="#">Supprimer</a>
+                        <a class="dropdown-item" href="#">Générer PDF</a>
+                      </div>
+                    </div>-->
+		        </div>
+            </nav>
+        </div>
+
+        <div class="container">
+            <div id="ContentPage">
+                <!-- Contenu de la page -->
+            </div>
+        </div>
+
+    </div>
+
+    <br><br>
+
+    <div class="overlay"></div>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+</body>
+
+</html>
+    <!--Script permettant l'emploie de ajax et jquery (connexion au serveur)-->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>
+    function isConnected() {$.post(
+            'http://localhost/JSValAcro/isConnected.php',
+            {
+                //no data()
+            },
+            function(data) {
+                console.log(data);
+                if (data == "Success") {
+                    console.log('connected !!!!')
+                    back();
+                    dataUser();
+                }
+                else {
+                    //User must be connected
+                    console.log("Il y a un pb!!!");
+                }
+            },
+            'text'
+    );}
+
+    function dataUser(){
+        $.post(
+            'http://localhost/JSValAcro/userRecap.php',
+            {
+                uid : extractUrlParams()['uid'],
+                pid : extractUrlParams()['pid']
+            },
+            function(data) {
+                console.log(data);
+                html='';
+                if (data != null){
+                    html+='<center><h2>Fiche Identité</h2><br><br>';
+                    html+='<img src="img/user.png" style="height: 250px; width: auto;">';
+                    html+='<br><br>';
+                    html+='<p><b>Nom:</b> '+data['nom']+'</p>';
+                    html+='<p><b>Prenom:</b> '+data['prenom']+'</p>';
+                    html+='<p><b>Date de naissance:</b>  '+(((data['bday']==null) || (data['mday']==null) || (data['yday']==null))?' Date non renseignée ':(data['bday']+'/'+data['mday']+'/'+data['yday']))+'</p>';
+                    //html+='<p><b>Groupe:</b></p>';
+                    html+='<br><br></center><br>';
+                }
+                $("#ContentPage").html(html);
+            },
+            'json'
+            );
+    }
+
+    function back() {
+        html = '<a href=';
+        if (((extractUrlParams()['src'])=== undefined) || ((extractUrlParams()['src'])=== null ))
+        {
+            $back = "page_myprofile.html";
+        } else {
+            $back = extractUrlParams()['src'];
+            if ($back == 'page_group.html'){
+                $back += '?id_groupe='+extractUrlParams()['id_groupe'];
+            }
+        }
+        html += $back;
+        html+=' class="btn btn-dark"><i class="fas fa-arrow-left"></i></a>';
+        $('#Back').html(html);
+    }
+
+    function extractUrlParams() {
+        //On apelle cette fonction seulement si l'utilisateur est connecté! 
+        var parms = [];
+        var url = location.search.substring(1).split('&');
+        //location.search donne la partie de l'url situé après le nom de la page (?....)
+        //On exclut le premier caractère de cette partie, qui est ?.
+        //On compte le nombre de paramètre passé par la m"thode GET grâce au split('&') où & sépare ces derniers.
+        for (var i=0; i<url.length; i++) {
+            //url[i] contient un data de type "paramètre=value"
+            var idETparam = url[i].split('=');
+            parms[idETparam[0]]=idETparam[1];
+            //si il apelle la page avec des paramètres mal définit, (ex: ..?id_event&other_parm=2), on retrouve alors un undefined en valeur.
+        }
+        return parms;
+    };
+</script>

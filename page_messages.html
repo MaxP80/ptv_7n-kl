@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Messagerie</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/popup.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- Modal -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        table {
+            border-collapse: separate;
+            border-spacing: 10px;
+        }
+    </style>
+
+</head>
+
+<body onload ="javascript:isConnected();">
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <div w3-include-html="nav.html"></div>
+        <script>w3IncludeHTML()</script>
+        <script src="nav.js"></script>
+        <!-- Page Content  -->
+        <div id="container-fluid">
+            <nav class="navbar navbar-dark">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <b class="navtxt">Messagerie</b>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="col-md-12">
+                    <center>
+
+                            <!-- Trigger the modal with a button -->
+                            <!--
+                              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#myModal">Choix Du (Des) Destinataire(s)</button>
+                            -->
+                            <button type="button" class="btn btn-dark" onclick="groupPopUp()">Choix Du (Des) Destinataire(s)</button>
+                            <br><br>
+                            <div id="showDestinataires">
+                                <!-- Montre les destinataires choisies -->
+                                Aucun destinataire de choisi
+                            </div>
+                            <br>
+                            <input type="text" name="subject" id="subject" placeholder="Sujet" style="width: 60%;">
+                            <br><br><br>
+                            <textarea id="msg" name="message" form="grpmsg" rows="10" cols="50" placeholder="Ecrivez votre message" style="width: 60%;"></textarea>
+                            <br><br><br>
+                            <button type="button" class="btn btn-dark" onclick="sendMessage()">Envoyer</button>
+                    </center>
+                    
+                </div>  
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+        
+          <!-- Modal content-->
+          <!--
+          <div class="modal-content">
+
+            <div>
+                <center>
+                    <button type="button" class="close" data-dismiss="modal" style="margin-right: 20px;">&times;</button>
+                    <h4>Choix des destinataires</h4>
+                </center>
+            </div>
+            
+            <div class="modal-body">
+                <center>
+                    <input type="checkbox" name="grp1" value="Grp1">&nbsp;&nbsp;Group 1<br><br>
+                    <input type="checkbox" name="grp2" value="Grp2">&nbsp;&nbsp;Group 2<br><br>
+                    <input type="checkbox" name="grp3" value="Grp3">&nbsp;&nbsp;Group 3<br><br>
+                </center>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    <div class="overlay"></div>
+
+                    <div id="popupSubmit" class="modal">
+                        <!-- Contenu de la fenêtre -->
+                        <div class="modal-content">
+                            <div id="closeAlertPopUp"></div> <!-- croix pour fermer la pop up-->
+                            <center>
+                            <p><div id="message"></div></p>
+                            </center>
+                        </div>
+                    </div>
+                    <div id="popupGroup" class="modal">
+                        <!-- Contenu de la fenêtre -->
+                        <div class="modal-content">
+                            <div id="closeGroupPopUp"></div> <!-- croix pour fermer la pop up-->
+                            <center>
+                            <p><div id="listeGroup"></div></p>
+                            </center>
+                        </div>
+                    </div>       
+
+</body>
+
+</html>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="styles/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('ready');
+            loadChoixGroupe();
+            //On charge les différents groupes
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+        });
+    </script>
+
+<script> //onload functions
+
+    //Variable dans laquelle on stocke l'ensemble des groupes à qui l'on peut envoyer un message
+    dataGroup = null;
+    //Variable dans laquelle on stocke l'ensemble des groupes à qui l'on souhaite envoyer le message
+    destinatairesMessage = null;
+
+    function isConnected() {$.post(
+        'http://localhost/JSValAcro/isConnected.php',
+        {
+            //no data()
+        },
+        function(data) {
+            console.log(data);
+            if (data == "Success") {
+                //Do nothing                
+            }
+            else {
+                //User must be connected
+                document.location.href="index.html";
+            }
+        },
+        'text'
+    );};
+
+    function loadChoixGroupe(){
+        console.log('load group');
+        $.post(
+            'listeGroupeToSendMessage.php',
+            {
+                //no data
+            },
+            function(data){
+                console.log(data);
+                if (data != null){
+                    dataGroup = data;
+                }
+                console.log(dataGroup);
+            },
+            'json'
+        );
+    }
+
+    /* Fenêtre pour message d'alerte */
+    var alert = document.getElementById('popupSubmit');
+    //$quit = document.getElementsById("logoCloseAlertPopUp");
+    function alertPopUp(rep) {
+        var html ='';
+        if (rep == 'Envoie du message avec succés'){
+            html = '<a href="page_messages.html"><span class="close" style="text-align: right;" onclick="closeAlertPopUp()";>&times;</span></a>';
+        } else {
+            html = '<span class="close" style="text-align: right;" onclick="closeAlertPopUp()";>&times;</span>';
+        }
+        $("#closeAlertPopUp").html(html);
+        $("#message").html(rep);
+        alert.style.display = "block";
+    }
+
+    function closeAlertPopUp() {
+        alert.style.display = "none";
+    }
+    /* Fenêtre pour afficher les groupes à qui envoyer un message */
+    //$quit = document.getElementsById("logoCloseAlertPopUp");
+    function groupPopUp() {
+        var group = document.getElementById('popupGroup');
+        console.log(destinatairesMessage);
+        htmlClose = '<span class="close" style="text-align: right;" onclick="closeGroupPopUp()";>&times;</span>';
+        $("#closeGroupPopUp").html(htmlClose);
+        htmlContenant ='<center>Choix du (des) destinataire(s) <br><br><table>';
+        console.log(dataGroup.length);
+        for (var i = 0; i < dataGroup.length; i++){
+            htmlContenant += '<tr><td><input type="checkbox" name="groupSelect" id="groupSelect_'+i+'" value="'+dataGroup[i]['id_groupe']+'" '+((inDestinataire(dataGroup[i]['id_groupe'], dataGroup[i]['nom']) != -1)? 'checked' : '')+'></td><td>'+dataGroup[i]['nom']+'</td></tr>';
+        }
+        htmlContenant += "</table></center>";
+        htmlContenant += '<div style="text-align:right;"><input type="button" class="btn btn-dark" value="Valider" onclick="RecupDestinataires()"></div>';
+        $("#listeGroup").html(htmlContenant);
+        group.style.display = "block";
+    }
+/*( (destinatairesMessage!= null) && (destinatairesMessage.indexOf([dataGroup[i]['id_groupe'], dataGroup[i]['nom']]) != -1))*/
+    function inDestinataire(id, nom){
+        var res = -1; 
+        var i = 0;
+        if (destinatairesMessage != null){
+            while ((res==-1) && (i < destinatairesMessage.length)){
+                if ((destinatairesMessage[i][0] == id+'') && (destinatairesMessage[i][1] == nom+'')){
+                    res = i;
+                }
+                i++;
+            }
+        }
+        console.log(id+' - '+nom+' at pos '+res);
+        return res;
+    }
+
+    function closeGroupPopUp() {
+        var group = document.getElementById('popupGroup');
+        group.style.display = "none";
+    }
+
+    function RecupDestinataires() {
+        var elts = document.getElementsByName('groupSelect');
+        var nbElts = elts.length;
+        var destinataires = [];
+        for (var i = 0; i<nbElts; i++){
+            id = document.getElementById('groupSelect_'+i+'').value;
+            isChecked = $('#groupSelect_'+i+'').is(":checked");
+            if (isChecked){
+                //Ce groupe fait partie des destinataires du message
+                array = [id, RecupNameById(id)];
+                destinataires.push(array);
+                //console.log('is chacked');
+                //console.log(id+' '+isChecked);
+                //console.log(RecupNameById(id));
+            }
+        }
+        //console.log('Recup fini avec '+destinataires.length+' elts');
+        //console.log(destinataires);
+        destinatairesMessage = destinataires;
+        console.log(destinatairesMessage);
+        //On montre les destinataires
+        showDestinataires();
+        //On ferme la fenêtre
+        closeGroupPopUp();
+    }
+
+    function RecupNameById (id){
+        var i = 0;
+        var res = null;
+        while ((i<dataGroup.length) && (res == null)){
+            name = dataGroup[i]['nom'];
+            id_data = dataGroup[i]['id_groupe'];
+            if (id_data == id){
+                res = name;
+            }
+            i++;
+        }
+        console.log('id :'+id+' -> name :'+res);
+        return res;
+    }
+
+    function showDestinataires(){
+        if ((destinatairesMessage != null) && (destinatairesMessage.length > 0)) {
+            html = '<p>Destinataire'+((destinatairesMessage.length > 1)? 's ':' ')+'</p>';
+            for (var i = 0; i < destinatairesMessage.length; i++){
+                html += destinatairesMessage[i][1];
+                if (i != destinatairesMessage.length-1){
+                    html+=' ; ';
+                }
+            }
+            $('#showDestinataires').html(html);
+        } else if (destinatairesMessage != null) {
+            html = '<p>Aucun destinataire de choisi</p>';
+            $('#showDestinataires').html(html);
+        }
+    }
+
+    function getIdGroupes(){
+        res = "";
+        if (destinatairesMessage != null){
+            for (var i = 0; i<destinatairesMessage.length; i++){
+                res+=destinatairesMessage[i][0];
+                if (i != destinatairesMessage.length-1){
+                        html+='||';
+                }
+            }
+        }
+        return res;
+    }
+
+    function sendMessage(){
+        console.log('Send...');
+        if ((destinatairesMessage != null) && (destinatairesMessage.length > 0)){
+            if (($("#subject").val() != '') && ($("#subject").val() != '')) {
+                $.post(
+                'http://localhost/JSValAcro/send_message_groupe.php',
+                {
+                    id_groupes : getIdGroupes(),
+                    subject : $("#subject").val(),
+                    msg : $("#subject").val()
+                },
+                function(data) {
+                    console.log(data);
+                    alertPopUp(data);
+                },
+                'text'
+                );
+            } else {
+                alertPopUp("Vous devez saisir un message et un sujet");
+            }
+        } else {
+            alertPopUp("Vous devez choisir au moins un destinataire");
+        }
+    }
+
+</script>
